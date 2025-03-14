@@ -1,44 +1,51 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import type { Snippet } from './types/Snippet';
-import NewSnippet from './components/NewSnippet/NewSnippet.vue';
-import NoSnippets from './components/NoSnippets/NoSnippets.vue';
+/// <reference types="chrome"/>
 
-let snippets = ref<Snippet[]>([]);
-const isAddSnippetActive = ref(false);
+import { ref, onMounted } from 'vue';
+import SnippetManager from './components/TemplateManager/SnippetManager.vue';
+import type { Snippet } from './types/Snippet';
+
+const snippets = ref<Snippet[]>([]);
 
 function loadSnippets() {
-  chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
-    snippets.value = result.snippets || [];
-    console.log("Loaded snippets:", snippets.value);
+  try {
+    chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
+      snippets.value = (result.snippets && result.snippets.length > 0) ? result.snippets : [];
+      console.log("Loaded snippets:", snippets.value);
+  });
+  } catch (error) {
+      console.log(error);
+  }
+
+}
+
+function clearStorage() {
+  chrome.storage.local.clear(() => {
+    console.log("Chrome storage has been cleared.");
   });
 }
-chrome.runtime.onStartup.addListener(() => {
+onMounted(() => {
   console.log("Browser startup - loading snippets");
   loadSnippets();
+  clearStorage();
 });
-
-
 </script>
 
 <template>
   <div class="mainWrapper">
-    <!-- Show NoSnippets if there are no snippets and NewSnippet is not active -->
-    <NoSnippets v-if="snippets.length === 0 && !isAddSnippetActive" @toggle-add-snippet="isAddSnippetActive = $event"/>
-    <div class="newSnippetWrapper" v-if="isAddSnippetActive">
-      <NewSnippet @toggle-add-snippet="isAddSnippetActive = $event"/>
-    </div>
+    <SnippetManager @snippet-saved="loadSnippets" :snippets/>
   </div>
 </template>
 
 <style>
+#app {
+  min-width: 500px;
+  max-width: 600px;
+}
 .mainWrapper {
   justify-content: center;
   display: flex;
   align-items: center;
   padding: 30px;
-}
-.newSnippetWrapper {
-  padding: 5px
 }
 </style>

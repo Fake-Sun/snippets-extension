@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
-import NewYorkH3 from '../Typography/NewYorkH3.vue';
+import NewYorkH3 from '../../Typography/NewYorkH3.vue';
 
 const emit = defineEmits<{ (e: 'toggle-add-snippet', value: boolean): void }>();
 
