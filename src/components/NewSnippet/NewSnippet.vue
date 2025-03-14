@@ -17,13 +17,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+
+const emit = defineEmits<{ (e: 'toggle-add-snippet', value: boolean): void }>();
+
+function onButtonClick() {
+  // Emit event to update isAddSnippetActive.
+  emit('toggle-add-snippet', false);
+}
+
 </script>
 
 <template>
   <Card class="w-[350px]">
     <CardHeader>
-      <CardTitle class="text-lg">New Snippet</CardTitle>
-      <CardDescription>Create a new snippet.</CardDescription>
+      <CardTitle>Create snippet</CardTitle>
+      <CardDescription>Make a new snippet in one-click.</CardDescription>
     </CardHeader>
     <CardContent>
       <form>
@@ -33,39 +42,21 @@ import {
             <Input id="name" placeholder="Name of your project" />
           </div>
           <div class="flex flex-col space-y-1.5">
-            <Label for="framework">Framework</Label>
-            <Select>
-              <SelectTrigger id="framework">
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                <SelectItem value="nuxt">
-                  Nuxt
-                </SelectItem>
-                <SelectItem value="next">
-                  Next.js
-                </SelectItem>
-                <SelectItem value="sveltekit">
-                  SvelteKit
-                </SelectItem>
-                <SelectItem value="astro">
-                  Astro
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <Label for="shortcut">Shortcut</Label>
+            <Input id="shortcut" placeholder="I.E: /shortcut"/>
+          </div>
+          <div class="flex flex-col space-y-1.5">
+            <Label for="text">Shortcut</Label>
+            <Textarea id="text" placeholder="I.E: /shortcut"/>
           </div>
         </div>
       </form>
     </CardContent>
     <CardFooter class="flex justify-between px-6 pb-6">
-      <Button variant="outline">
+      <Button variant="outline" @click="onButtonClick">
         Cancel
       </Button>
       <Button>Deploy</Button>
     </CardFooter>
   </Card>
 </template>
-
-<style>
-
-</style>
