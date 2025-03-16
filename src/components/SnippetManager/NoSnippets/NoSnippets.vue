@@ -14,21 +14,20 @@ function onButtonClick() {
 <template>
   <div class="contentWrapper">
     <div class="title">
-      <NewYorkH3>
-      <h4>No templates</h4>
-    </NewYorkH3>
+      <NewYorkH3>No tienes snippets</NewYorkH3>
     </div>
     <div class="button">
-      <Button @click="onButtonClick">Create Your First Snippet</Button>
+      <Button @click="onButtonClick">Crear mi primer snippet</Button>
     </div>
   </div>
 </template>
 
-<style>
+<style scoped>
 .contentWrapper {
   display: grid;
   justify-content: center;
   align-items: center;
+  min-width: 450px;
 }
 
 .title {

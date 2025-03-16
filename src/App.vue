@@ -2,7 +2,7 @@
 /// <reference types="chrome"/>
 
 import { ref, onMounted } from 'vue';
-import SnippetManager from './components/TemplateManager/SnippetManager.vue';
+import SnippetManager from './components/SnippetManager/SnippetManager.vue';
 import type { Snippet } from './types/Snippet';
 
 const snippets = ref<Snippet[]>([]);
@@ -20,9 +20,7 @@ function loadSnippets() {
 }
 
 function clearStorage() {
-  chrome.storage.local.clear(() => {
-    console.log("Chrome storage has been cleared.");
-  });
+
 }
 onMounted(() => {
   console.log("Browser startup - loading snippets");
@@ -38,10 +36,6 @@ onMounted(() => {
 </template>
 
 <style>
-#app {
-  min-width: 500px;
-  max-width: 600px;
-}
 .mainWrapper {
   justify-content: center;
   display: flex;

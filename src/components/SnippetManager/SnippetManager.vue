@@ -12,7 +12,6 @@ const emit = defineEmits<{(e: 'snippet-saved'): void}>();
 
 onMounted(() => {
   console.log("length:" + snippets)
-  console.log("Is: " + isAddSnippetActive)
 })
 
 function forwardSave() {
@@ -21,8 +20,8 @@ function forwardSave() {
 </script>
 
 <template>
-    <div class="w-full">
-      <SnippetList :snippets/>
+  <div class="w-full">
+    <SnippetList :snippets/>  
     <!-- Show NoSnippets if there are no snippets and NewSnippet is not active -->
     <NoSnippets v-if="snippets.length === 0 && !isAddSnippetActive" @toggle-add-snippet="isAddSnippetActive = $event"/>
     <div class="newSnippetWrapper" v-if="isAddSnippetActive">
@@ -37,5 +36,6 @@ function forwardSave() {
   justify-content: center;
   align-items: center;
   display: flex;
+
 }
 </style>

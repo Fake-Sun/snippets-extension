@@ -6,11 +6,14 @@ const { snippets } = defineProps<{snippets: Snippet[]}>()
 </script>
 
 <template>
-  <div class="flex flex-col space-y-2" >
+  <div class="wrapper flex flex-col space-y-2" >
     <SnippetCard v-for="snippet in snippets" :key="snippet.shortcut" :name="snippet.name" :text="snippet.text" :shortcut="snippet.shortcut"/>
   </div>
 </template>
 
 <style>
-
+  .wrapper {
+    min-width: 400px;
+    max-width: 400px;
+  }
 </style>
