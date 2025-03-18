@@ -15,6 +15,14 @@ interface Props {
 }
 
 const { name, text, shortcut } = defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'delete-snippet', identifier: string): void
+}>()
+
+function deleteSnippet() {
+  emit('delete-snippet', shortcut)
+}
 </script>
 
 <template>
@@ -25,7 +33,7 @@ const { name, text, shortcut } = defineProps<Props>()
       <Label for="cardDescription" class="nameLabel">{{ name }}</Label>
       <div class="iconsContainer">
         <Pencil :size="20" absoluteStrokeWidth />
-        <Trash2 :size="20" absoluteStrokeWidth />
+        <Trash2 :size="20" absoluteStrokeWidth @click="deleteSnippet"/>
         <Badge class="shortcut-badge text-sm">
             <span class="badge-text">
               {{ shortcut }}
@@ -40,6 +48,16 @@ const { name, text, shortcut } = defineProps<Props>()
 </template>
 
 <style scoped>
+
+.iconsContainer svg {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.iconsContainer svg:hover {
+  transform: scale(1.1);
+}
+
 .nameLabel {
   display: inline-block;
   width: 20ch;
@@ -62,7 +80,7 @@ const { name, text, shortcut } = defineProps<Props>()
 }
 .shortcut-badge {
   box-sizing: border-box;
-  width: 19ch; /* overall badge width */
+  max-width: 19ch; /* overall badge width */
 }
 
 .badge-text {
@@ -70,11 +88,15 @@ const { name, text, shortcut } = defineProps<Props>()
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 12px;
+  pointer-events: none;
 }
 
 .snippet-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 12px;
+  pointer-events: none;
 }
 </style>

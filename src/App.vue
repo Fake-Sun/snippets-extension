@@ -4,14 +4,13 @@
 import { ref, onMounted } from 'vue';
 import SnippetManager from './components/SnippetManager/SnippetManager.vue';
 import type { Snippet } from './types/Snippet';
-
+import { CirclePlus } from 'lucide-vue-next';
 const snippets = ref<Snippet[]>([]);
 
 function loadSnippets() {
   try {
     chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
       snippets.value = (result.snippets && result.snippets.length > 0) ? result.snippets : [];
-      console.log("Loaded snippets:", snippets.value);
   });
   } catch (error) {
       console.log(error);
@@ -19,24 +18,37 @@ function loadSnippets() {
 
 }
 
-function clearStorage() {
-
+function handleDeleteSnippet(shortcut: string) {
+  // Assuming name is unique for this small, local project.
+  const updatedSnippets = snippets.value.filter(snippet => snippet.shortcut !== shortcut);
+  chrome.storage.local.set({ snippets: updatedSnippets }, () => {
+    snippets.value = updatedSnippets;
+  });
 }
+
 onMounted(() => {
-  console.log("Browser startup - loading snippets");
   loadSnippets();
-  clearStorage();
 });
 </script>
 
 <template>
-  <div class="mainWrapper">
-    <SnippetManager @snippet-saved="loadSnippets" :snippets/>
+  <div class="h-14 w-full bg-primary flex">
+    <div>
+      <CirclePlus :size="38" :stroke-width="3" class="addSnippetIcon" color="white"/>
+    </div>
+  </div>
+  <div class="managerContainer">
+    <SnippetManager :snippets @snippet-saved="loadSnippets" @delete-snippet="handleDeleteSnippet"
+    />
   </div>
 </template>
 
 <style>
-.mainWrapper {
+.addSnippetIcon {
+  margin: 10px;
+
+}
+.managerContainer {
   justify-content: center;
   display: flex;
   align-items: center;
