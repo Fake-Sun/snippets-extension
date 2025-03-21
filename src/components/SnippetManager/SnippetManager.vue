@@ -34,12 +34,11 @@ function forwardDeleteSnippet(shortcut: string) {
   </div>
 </template>
 
-<style>
+<style scoped>
 .newSnippetWrapper {
   padding: 5px;
   justify-content: center;
   align-items: center;
   display: flex;
-
 }
 </style>

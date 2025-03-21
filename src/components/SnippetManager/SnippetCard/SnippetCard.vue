@@ -48,7 +48,6 @@ function deleteSnippet() {
 </template>
 
 <style scoped>
-
 .iconsContainer svg {
   cursor: pointer;
   transition: transform 0.2s;

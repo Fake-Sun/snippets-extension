@@ -5,6 +5,7 @@ import { ref, onMounted } from 'vue';
 import SnippetManager from './components/SnippetManager/SnippetManager.vue';
 import type { Snippet } from './types/Snippet';
 import { CirclePlus } from 'lucide-vue-next';
+import { Label } from '@/components/ui/label';
 const snippets = ref<Snippet[]>([]);
 
 function loadSnippets() {
@@ -32,9 +33,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-14 w-full bg-primary flex">
-    <div>
-      <CirclePlus :size="38" :stroke-width="3" class="addSnippetIcon" color="white"/>
+  <div class="h-14 p-2 w-full bg-primary flex flex-row-reverse items-center">
+    <div class="flex items-center gap-2">
+      <Label class="clickable">New Snippet</Label>
+      <CirclePlus :size="25" absoluteStrokeWidth color="white" class="clickable"/>
     </div>
   </div>
   <div class="managerContainer">
@@ -43,10 +45,10 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
-.addSnippetIcon {
-  margin: 10px;
-
+<style scoped>
+.clickable {
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 .managerContainer {
   justify-content: center;

@@ -15,7 +15,7 @@ const emit = defineEmits<{
   </div>
 </template>
 
-<style>
+<style scoped>
   .wrapper {
     min-width: 400px;
     max-width: 400px;
