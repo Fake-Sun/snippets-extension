@@ -64,7 +64,7 @@ function handleSave(snippet: Snippet) {
     <CardContent>
       <SnippetForm ref="snippetFormRef" @form-submitted="handleSave"/> 
     </CardContent>
-    <CardFooter class="flex justify-between px-6 pb-6">
+    <CardFooter class="flex justify-between px-6 ">
       <Button variant="outline" @click="onCancelButtonClick">
         Cancelar
       </Button>

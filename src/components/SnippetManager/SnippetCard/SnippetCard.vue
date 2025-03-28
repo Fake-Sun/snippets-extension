@@ -26,8 +26,7 @@ function deleteSnippet() {
 </script>
 
 <template>
-<div>
-  <Card>
+<Card>
   <CardHeader class="gap-0">
     <div class="header-content">
       <Label for="cardDescription" class="nameLabel">{{ name }}</Label>
@@ -44,7 +43,6 @@ function deleteSnippet() {
     <CardDescription class="snippet-text">{{ text }}</CardDescription>
   </CardHeader>
 </Card>
-</div>
 </template>
 
 <style scoped>

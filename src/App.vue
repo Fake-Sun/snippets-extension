@@ -8,6 +8,10 @@ import { CirclePlus } from 'lucide-vue-next';
 import { Label } from '@/components/ui/label';
 const snippets = ref<Snippet[]>([]);
 
+const emit = defineEmits<{
+  (e: 'add-snippet'): void;
+}>();
+
 function loadSnippets() {
   try {
     chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
@@ -27,6 +31,10 @@ function handleDeleteSnippet(shortcut: string) {
   });
 }
 
+const forwardNewSnippet = () => {
+  emit('add-snippet');
+}
+
 onMounted(() => {
   loadSnippets();
 });
@@ -34,9 +42,9 @@ onMounted(() => {
 
 <template>
   <div class="h-14 p-2 w-full bg-primary flex flex-row-reverse items-center">
-    <div class="flex items-center gap-2">
-      <Label class="clickable">New Snippet</Label>
-      <CirclePlus :size="25" absoluteStrokeWidth color="white" class="clickable"/>
+    <div class="p-2 flex items-center gap-2 newSnippetWrapper clickable" @click="forwardNewSnippet">
+      <Label style="color: white" class="clickable">Nuevo Snippet</Label>
+      <CirclePlus :size="27" absoluteStrokeWidth color="white" class="clickable"/>
     </div>
   </div>
   <div class="managerContainer">
@@ -46,9 +54,16 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.newSnippetWrapper {
+  transition: transform 0.25s;
+}
+.newSnippetWrapper:hover {
+
+  background-color: rgb(235, 111, 132);
+  border-radius: 10px;
+}
 .clickable {
   cursor: pointer;
-  transition: transform 0.2s;
 }
 .managerContainer {
   justify-content: center;
