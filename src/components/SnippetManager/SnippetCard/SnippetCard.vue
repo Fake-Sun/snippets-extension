@@ -58,9 +58,12 @@ function deleteSnippet() {
 .nameLabel {
   display: inline-block;
   width: 20ch;
-  overflow: hidden;       /* Optional: Hide overflowing text */
-  text-overflow: ellipsis; /* Optional: Show ellipsis if needed */
-  white-space: nowrap;     /* Optional: Prevent wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.4;       /* Adjust line height as needed */
+  padding-top: 2px;       /* Add some padding if letters are clipped */
+  vertical-align: middle; /* Ensure it's aligned properly */
 }
 .header-content {
   display: flex;

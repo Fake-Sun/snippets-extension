@@ -4,13 +4,10 @@
 import { ref, onMounted } from 'vue';
 import SnippetManager from './components/SnippetManager/SnippetManager.vue';
 import type { Snippet } from './types/Snippet';
-import { CirclePlus } from 'lucide-vue-next';
-import { Label } from '@/components/ui/label';
-const snippets = ref<Snippet[]>([]);
+import SnippetNav from './components/SnippetNav.vue'
 
-const emit = defineEmits<{
-  (e: 'add-snippet'): void;
-}>();
+const snippets = ref<Snippet[]>([]);
+const isAddSnippetActive = ref(false);
 
 function loadSnippets() {
   try {
@@ -31,8 +28,8 @@ function handleDeleteSnippet(shortcut: string) {
   });
 }
 
-const forwardNewSnippet = () => {
-  emit('add-snippet');
+function onAddSnippet() {
+  isAddSnippetActive.value = true;
 }
 
 onMounted(() => {
@@ -41,30 +38,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-14 p-2 w-full bg-primary flex flex-row-reverse items-center">
-    <div class="p-2 flex items-center gap-2 newSnippetWrapper clickable" @click="forwardNewSnippet">
-      <Label style="color: white" class="clickable">Nuevo Snippet</Label>
-      <CirclePlus :size="27" absoluteStrokeWidth color="white" class="clickable"/>
-    </div>
-  </div>
+  <SnippetNav @add-snippet="onAddSnippet"/>
   <div class="managerContainer">
-    <SnippetManager :snippets @snippet-saved="loadSnippets" @delete-snippet="handleDeleteSnippet"
+    <SnippetManager 
+    :snippets
+    :is-add-snippet-active="isAddSnippetActive" 
+    @snippet-saved="loadSnippets"
+    @delete-snippet="handleDeleteSnippet"
+    @toggle-add-snippet="val => isAddSnippetActive = val"
     />
   </div>
 </template>
 
 <style scoped>
-.newSnippetWrapper {
-  transition: transform 0.25s;
-}
-.newSnippetWrapper:hover {
-
-  background-color: rgb(235, 111, 132);
-  border-radius: 10px;
-}
-.clickable {
-  cursor: pointer;
-}
 .managerContainer {
   justify-content: center;
   display: flex;

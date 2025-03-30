@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import NewSnippet from './NewSnippet/NewSnippet.vue';
 import NoSnippets from './NoSnippets/NoSnippets.vue';
 import SnippetList from './SnippetList/SnippetList.vue';
 import type { Snippet } from '@/types/Snippet';
 
-const isAddSnippetActive = ref(false);
-const { snippets } = defineProps<{snippets: Snippet[]}>();
+let {snippets, isAddSnippetActive} = defineProps<{
+  snippets: Snippet[],
+  isAddSnippetActive: boolean
+}>();
 
 const emit = defineEmits<{
   (e: 'snippet-saved'): void;
@@ -21,15 +22,22 @@ function forwardSave() {
 function forwardDeleteSnippet(shortcut: string) {
   emit('delete-snippet', shortcut);
 }
+
+function onAddSnippet ($event: boolean) {
+  emit('toggle-add-snippet', $event)
+}
 </script>
 
 <template>
   <div class="w-full">
-    <SnippetList :snippets @delete-snippet="forwardDeleteSnippet"/>  
+    <SnippetList :snippets @delete-snippet="forwardDeleteSnippet" v-if="!isAddSnippetActive"/>  
     <!-- Show NoSnippets if there are no snippets and NewSnippet is not active -->
-    <NoSnippets v-if="snippets.length === 0 && !isAddSnippetActive" @toggle-add-snippet="isAddSnippetActive = $event"/>
+    <NoSnippets
+    v-if="snippets.length === 0 && !isAddSnippetActive"
+    @toggle-add-snippet="onAddSnippet($event)"
+    />
     <div class="newSnippetWrapper" v-if="isAddSnippetActive">
-      <NewSnippet @snippet-saved="forwardSave" @toggle-add-snippet="isAddSnippetActive = $event"/>
+      <NewSnippet @snippet-saved="forwardSave" @toggle-add-snippet="onAddSnippet($event)"/>
     </div>
   </div>
 </template>
