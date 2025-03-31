@@ -19,7 +19,7 @@ const emit = defineEmits<{
       :text="snippet.text"
       :shortcut="snippet.shortcut"
       @delete-snippet="emit('delete-snippet', $event)"
-      @edit-snippet="emit('edit-snippet', $event)"
+      @edit-snippet="emit('edit-snippet', snippet)"
     />
   </div>
 </template>
