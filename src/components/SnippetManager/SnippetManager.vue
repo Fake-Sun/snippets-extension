@@ -10,9 +10,10 @@ let {snippets, isAddSnippetActive} = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'snippet-saved'): void;
-  (e: 'delete-snippet', identifier: string): void;
-  (e: 'toggle-add-snippet', value: boolean): void;
+  (e: 'snippet-saved'): void
+  (e: 'delete-snippet', identifier: string): void
+  (e: 'toggle-add-snippet', value: boolean): void
+  (e: 'edit-snippet', snippet: Snippet): void
 }>();
 
 function forwardSave() {
@@ -20,24 +21,31 @@ function forwardSave() {
 }
 
 function forwardDeleteSnippet(shortcut: string) {
-  emit('delete-snippet', shortcut);
+  emit('delete-snippet', shortcut)
 }
 
-function onAddSnippet ($event: boolean) {
-  emit('toggle-add-snippet', $event)
+function onAddSnippet (addingSnippet: boolean) {
+  emit('toggle-add-snippet', addingSnippet)
 }
+
 </script>
 
 <template>
   <div class="w-full">
-    <SnippetList :snippets @delete-snippet="forwardDeleteSnippet" v-if="!isAddSnippetActive"/>  
-    <!-- Show NoSnippets if there are no snippets and NewSnippet is not active -->
+    <SnippetList
+      v-if="!isAddSnippetActive"
+      :snippets
+      @delete-snippet="forwardDeleteSnippet"
+    />
     <NoSnippets
     v-if="snippets.length === 0 && !isAddSnippetActive"
-    @toggle-add-snippet="onAddSnippet($event)"
+    @toggle-add-snippet="onAddSnippet"
     />
     <div class="newSnippetWrapper" v-if="isAddSnippetActive">
-      <NewSnippet @snippet-saved="forwardSave" @toggle-add-snippet="onAddSnippet($event)"/>
+      <NewSnippet
+        @snippet-saved="forwardSave"
+        @toggle-add-snippet="onAddSnippet"
+      />
     </div>
   </div>
 </template>

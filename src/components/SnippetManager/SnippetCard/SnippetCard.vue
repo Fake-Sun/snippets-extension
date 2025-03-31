@@ -6,22 +6,22 @@ import {
   CardHeader,
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import type { Snippet } from '@/types/Snippet';
 import { Pencil, Trash2 } from 'lucide-vue-next'
 
-interface Props {
-  name: string,
-  text: string,
-  shortcut: string
-}
-
-const { name, text, shortcut } = defineProps<Props>()
+const snippet = defineProps<Snippet>()
 
 const emit = defineEmits<{
   (e: 'delete-snippet', identifier: string): void
+  (e: 'edit-snippet', snippet: Snippet): void
 }>()
 
 function deleteSnippet() {
-  emit('delete-snippet', shortcut)
+  emit('delete-snippet', snippet.shortcut)
+}
+
+function editSnippet() {
+  emit('edit-snippet', snippet)
 }
 </script>
 
@@ -29,18 +29,18 @@ function deleteSnippet() {
 <Card>
   <CardHeader class="gap-0">
     <div class="header-content">
-      <Label for="cardDescription" class="nameLabel">{{ name }}</Label>
+      <Label for="cardDescription" class="nameLabel">{{ snippet.name }}</Label>
       <div class="iconsContainer">
-        <Pencil :size="20" absoluteStrokeWidth />
+        <Pencil :size="20" absoluteStrokeWidth @click="editSnippet"/>
         <Trash2 :size="20" absoluteStrokeWidth @click="deleteSnippet"/>
         <Badge class="shortcut-badge text-sm">
             <span class="badge-text">
-              {{ shortcut }}
+              {{ snippet.shortcut }}
             </span>
         </Badge>
       </div>
     </div>
-    <CardDescription class="snippet-text">{{ text }}</CardDescription>
+    <CardDescription class="snippet-text">{{ snippet.text }}</CardDescription>
   </CardHeader>
 </Card>
 </template>
@@ -48,11 +48,11 @@ function deleteSnippet() {
 <style scoped>
 .iconsContainer svg {
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.15s;
 }
 
 .iconsContainer svg:hover {
-  transform: scale(1.1);
+  transform: scale(1.4);
 }
 
 .nameLabel {
