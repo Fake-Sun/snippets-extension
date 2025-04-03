@@ -12,8 +12,8 @@ const forwardNewSnippet = () => {
 </script>
 
 <template>
-  <div class="h-14 p-2 w-full bg-primary flex flex-row-reverse items-center">
-    <div class="p-2 flex items-center gap-2 newSnippetWrapper clickable" @click="forwardNewSnippet">
+  <div class="h-14 w-full bg-primary flex flex-row-reverse items-center">
+    <div class="p-2 flex items-center gap-2 newSnippetWrapper clickable m-3" @click="forwardNewSnippet">
       <Label style="color: white" class="clickable">Nuevo Snippet</Label>
       <CirclePlus :size="27" absoluteStrokeWidth color="white" class="clickable"/>
     </div>

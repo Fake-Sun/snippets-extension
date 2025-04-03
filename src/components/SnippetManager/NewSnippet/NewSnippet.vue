@@ -12,10 +12,13 @@ import { ref } from 'vue'
 import SnippetForm from './../Form/SnippetForm.vue'
 import NewYorkH3 from '@/components/Typography/NewYorkH3.vue'
 
-const snippetName = ref('');
-const snippetText = ref('');
-const snippetShortcut = ref('');
 const snippetFormRef = ref<InstanceType<typeof SnippetForm> | null>(null);
+
+const snippet = defineProps<{
+  initialName: string,
+  initialText: string,
+  initialShortcut: string
+}>();
 
 const emit = defineEmits<{ 
   (e: 'toggle-add-snippet', value: boolean): void;
@@ -43,11 +46,6 @@ function handleSave(snippet: Snippet) {
     currentSnippets.push(newSnippet);
 
     chrome.storage.local.set({ snippets: currentSnippets }, () => {
-      console.log("Snippet saved:", newSnippet);
-      snippetName.value = '';
-      snippetText.value = '';
-      snippetShortcut.value = '';
-
       emit('snippet-saved');
       emit('toggle-add-snippet', false);
     });
@@ -62,7 +60,7 @@ function handleSave(snippet: Snippet) {
       <CardDescription>Guardar nuevo snippet.</CardDescription>
     </CardHeader>
     <CardContent>
-      <SnippetForm ref="snippetFormRef" @form-submitted="handleSave"/> 
+      <SnippetForm ref="snippetFormRef" @form-submitted="handleSave" :snippet/> 
     </CardContent>
     <CardFooter class="flex justify-between px-6 ">
       <Button variant="outline" @click="onCancelButtonClick">

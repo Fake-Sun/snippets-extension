@@ -1,37 +1,23 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { FormControl, FormLabel, FormDescription, FormMessage, FormItem, FormField } from '@/components/ui/form'
-import {z} from 'zod'
-import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import type { Snippet } from '@/types/Snippet';
-
-const formSchema = toTypedSchema(z.object({
-  name: z.string({ 
-    required_error: "Nombre es obligatorio."
-  }).min(3, "Nombre necesita al menos 3 caracteres.")
-    .max(50, "Nombre no puede contener mas de 50 caracteres.")
-    .transform(value => value.replace(/[\r\n]+/g, ' ')),
-
-  shortcut: z.string({
-    required_error: "Atajo es obligatorio."
-  }).min(2, "Atajo necesita al menos 3 caracteres.")
-    .max(20, "Atajo no puede contener más de 20 caracteres.")
-    .startsWith('/', "Atajo debe comenzar con \"/\"")
-    .toLowerCase()
-    .regex(/^\/\S*$/, "Atajo no puede contener espacios."),
-
-  text: z.string({
-    required_error: "Texto es obligatorio."
-  }).min(2, "Texto debe contener más de 2 caracteres.")
-    .max(1000, "Texto no debe contener más de 1000 caracteres.")
-}))
+import { formSchema } from './validation';
 
 const { isFieldDirty, handleSubmit } = useForm({
   validationSchema: formSchema
 })
+
+const { snippet } = defineProps<{
+  snippet: {
+    initialName: string,
+    initialText: string,
+    initialShortcut: string
+  }
+}>();
 
 const emit = defineEmits<{
   (e: 'form-submitted', snippet: Snippet): void;
@@ -49,7 +35,7 @@ function submitForm() {
 defineExpose({ submitForm });
 
 onMounted(() => {
-
+  console.log(snippet)
 }) 
 </script>
 
@@ -61,7 +47,11 @@ onMounted(() => {
           <div class="flex flex-col space-y-1.5">
             <FormLabel>Nombre</FormLabel>
             <FormControl>
-              <Input id="name" type="text" placeholder="Nombre de tu snippet" v-bind="componentField"
+              <Input
+                id="name"
+                type="text"
+                placeholder="Nombre de tu snippet"
+                v-bind="componentField"
               />
             </FormControl>
           </div>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Snippet } from '@/types/Snippet';
 import SnippetCard from '../SnippetCard/SnippetCard.vue';
+import SnippetPagination from '../Pagination/SnippetPagination.vue';
+import Breadcrumb from '../Breadcrumb/SnippetBreadcrumb.vue';
 
 const { snippets } = defineProps<{snippets: Snippet[]}>();
 
@@ -11,7 +13,8 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="wrapper flex flex-col space-y-2" >
+  <Breadcrumb class="pt-3 pb-3 justify-start"/>
+  <div class="wrapper flex flex-col space-y-2 justify-items-center" >
     <SnippetCard
       v-for="snippet in snippets"
       :key="snippet.shortcut"
@@ -21,12 +24,14 @@ const emit = defineEmits<{
       @delete-snippet="emit('delete-snippet', $event)"
       @edit-snippet="emit('edit-snippet', snippet)"
     />
+
   </div>
+
 </template>
 
 <style scoped>
   .wrapper {
     min-width: 400px;
-    max-width: 400px;
+    max-width: 100%;
   }
 </style>
