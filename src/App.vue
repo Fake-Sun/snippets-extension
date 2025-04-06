@@ -7,6 +7,7 @@ import type { Snippet } from './types/Snippet';
 import SnippetNav from './components/SnippetNav.vue'
 
 const snippets = ref<Snippet[]>([]);
+const currentPage = ref<Page>;
 const isAddSnippetActive = ref(false);
 
 function loadSnippets() {

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Snippet } from '@/types/Snippet';
 import SnippetCard from '../SnippetCard/SnippetCard.vue';
-import SnippetPagination from '../Pagination/SnippetPagination.vue';
 import Breadcrumb from '../Breadcrumb/SnippetBreadcrumb.vue';
 
 const { snippets } = defineProps<{snippets: Snippet[]}>();
@@ -24,9 +23,7 @@ const emit = defineEmits<{
       @delete-snippet="emit('delete-snippet', $event)"
       @edit-snippet="emit('edit-snippet', snippet)"
     />
-
   </div>
-
 </template>
 
 <style scoped>
