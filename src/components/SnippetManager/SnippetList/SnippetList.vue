@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Snippet } from '@/types/Snippet';
-import SnippetCard from '../SnippetCard/SnippetCard.vue';
+import SnippetCard from '../Cards/SnippetCard.vue';
 import Breadcrumb from '../Breadcrumb/SnippetBreadcrumb.vue';
 
 const { snippets } = defineProps<{snippets: Snippet[]}>();

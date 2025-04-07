@@ -1,9 +1,42 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import NewSnippet from './NewSnippet/NewSnippet.vue';
 import NoSnippets from './NoSnippets/NoSnippets.vue';
 import SnippetList from './SnippetList/SnippetList.vue';
 import type { Snippet } from '@/types/Snippet';
+import FolderCard from './Cards/FolderCard.vue'
+
+const currentPath = ref<string[]>(['Home'])
+
+const allFolders = [
+  { name: 'Frontend', path: ['Home'] },
+  { name: 'Backend', path: ['Home'] },
+  { name: 'Vue', path: ['Home', 'Frontend'] },
+]
+
+const isLeafFolder = computed(() =>
+  !allFolders.some(folder =>
+    JSON.stringify(folder.path) === JSON.stringify(currentPath.value)
+      ? false
+      : JSON.stringify(folder.path.slice(0, currentPath.value.length)) === JSON.stringify(currentPath.value)
+  )
+)
+
+const foldersInCurrent = computed(() =>
+  allFolders.filter(folder =>
+    JSON.stringify(folder.path) === JSON.stringify(currentPath.value)
+  )
+)
+
+const snippetsInCurrent = computed(() =>
+  snippets.filter(snippet =>
+    JSON.stringify(snippet.folderPath ?? ['Home']) === JSON.stringify(currentPath.value)
+  )
+)
+
+function openFolder(name: string) {
+  currentPath.value.push(name)
+}
 
 const { snippets, isAddSnippetActive } = defineProps<{
   snippets: Snippet[],
@@ -38,26 +71,40 @@ function onEditSnippet(snippet: Snippet) {
 </script>
 
 <template>
-  <div class="min-w-[400px]">
-    <!-- Show the list when not adding/editing -->
+  <div class="min-w-[400px] space-y-4">
+    <!-- Folders if not a leaf -->
+    <div
+      v-if="!isLeafFolder"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"
+    >
+      <FolderCard
+        v-for="folder in foldersInCurrent"
+        :key="folder.name"
+        :name="folder.name"
+        @click="openFolder(folder.name)"
+      />
+    </div>
+
+    <!-- Snippet list if leaf -->
     <SnippetList
-      v-if="snippets.length !== 0 && !isAddSnippetActive" 
-      :snippets="snippets" 
-      @delete-snippet="forwardDeleteSnippet" 
-      @edit-snippet="onEditSnippet" 
+      v-if="isLeafFolder && snippetsInCurrent.length && !isAddSnippetActive"
+      :snippets="snippetsInCurrent"
+      @delete-snippet="forwardDeleteSnippet"
+      @edit-snippet="onEditSnippet"
     />
-    <!-- If there are no snippets and not in add/edit mode -->
+
+    <!-- No snippets in leaf -->
     <NoSnippets
-      v-if="snippets.length === 0 && !isAddSnippetActive"
+      v-if="isLeafFolder && !snippetsInCurrent.length && !isAddSnippetActive"
       @toggle-add-snippet="onAddSnippet"
     />
 
-    <!-- Show the NewSnippet form when add/edit mode is active -->
-    <div class="newSnippetWrapper" v-if="isAddSnippetActive">
+    <!-- New Snippet form -->
+    <div v-if="isAddSnippetActive" class="newSnippetWrapper">
       <NewSnippet
-        :initialName="snippetToEdit?.name || ''" 
-        :initialText="snippetToEdit?.text || ''" 
-        :initialShortcut="snippetToEdit?.shortcut || ''" 
+        :initialName="snippetToEdit?.name || ''"
+        :initialText="snippetToEdit?.text || ''"
+        :initialShortcut="snippetToEdit?.shortcut || ''"
         @snippet-saved="forwardSave"
         @toggle-add-snippet="onAddSnippet"
         @edit-snippet="onEditSnippet"
@@ -65,6 +112,7 @@ function onEditSnippet(snippet: Snippet) {
     </div>
   </div>
 </template>
+
 
 <style scoped>
 .newSnippetWrapper {

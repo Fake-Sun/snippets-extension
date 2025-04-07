@@ -4,10 +4,11 @@
 import { ref, onMounted } from 'vue';
 import SnippetManager from './components/SnippetManager/SnippetManager.vue';
 import type { Snippet } from './types/Snippet';
+// import type { Folder } from './types/Folder';
 import SnippetNav from './components/SnippetNav.vue'
 
 const snippets = ref<Snippet[]>([]);
-const currentPage = ref<Page>;
+// const currentFolder = ref<Folder>();
 const isAddSnippetActive = ref(false);
 
 function loadSnippets() {
@@ -48,7 +49,7 @@ function onAddSnippet() {
   isAddSnippetActive.value = true;
 }
 
-onMounted(() => {loadSnippets(); console.log(snippets.value)});
+onMounted(() => { loadSnippets() });
 
 </script>
 

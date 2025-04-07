@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // This component just wraps its content with your typography classes.
 // Adjust the classes based on your New York theme configuration.
+
 </script>
 
 <template>
