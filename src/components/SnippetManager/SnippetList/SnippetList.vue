@@ -12,7 +12,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <Breadcrumb class="pt-3 pb-3 justify-start"/>
+  <Breadcrumb class="justify-start"/>
   <div class="wrapper flex flex-col space-y-2 justify-items-center" >
     <SnippetCard
       v-for="snippet in snippets"
