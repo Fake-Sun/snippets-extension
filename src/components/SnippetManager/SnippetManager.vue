@@ -4,7 +4,8 @@ import NewSnippet from './NewSnippet/NewSnippet.vue';
 import NoSnippets from './NoSnippets/NoSnippets.vue';
 import SnippetList from './SnippetList/SnippetList.vue';
 import type { Snippet } from '@/types/Snippet';
-import FolderCard from './Cards/FolderCard.vue'
+import FolderCard from './Cards/FolderCard.vue';
+import Breadcrumb from './Breadcrumb/SnippetBreadcrumb.vue';
 
 const currentPath = ref<string[]>(['Home'])
 
@@ -72,6 +73,7 @@ function onEditSnippet(snippet: Snippet) {
 
 <template>
   <div class="min-w-[400px] space-y-4">
+    <Breadcrumb class="justify-start"/>
     <!-- Folders if not a leaf -->
     <div
       v-if="!isLeafFolder"
