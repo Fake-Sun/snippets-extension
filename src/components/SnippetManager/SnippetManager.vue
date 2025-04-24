@@ -18,7 +18,7 @@ const allFolders = [
 const isLeafFolder = computed(() =>
   !allFolders.some(folder =>
     JSON.stringify(folder.path) === JSON.stringify(currentPath.value)
-      ? false
+      ? false 
       : JSON.stringify(folder.path.slice(0, currentPath.value.length)) === JSON.stringify(currentPath.value)
   )
 )
