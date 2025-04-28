@@ -22,12 +22,12 @@ const { snippet } = defineProps<{
 const emit = defineEmits<{
   (e: 'form-submitted', snippet: Snippet): void;
 }>();
-
 function onSubmit(snippet: Snippet) {
   emit('form-submitted', snippet);
 }
 
-// Function for the parent component to ha
+// Function to be called from the parent component to submit the form programmatically.
+// This is useful for cases where you want to trigger the form submission from a button or other event outside the form.
 function submitForm() {
   handleSubmit(onSubmit)();
 }

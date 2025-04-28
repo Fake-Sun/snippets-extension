@@ -9,36 +9,6 @@ import Breadcrumb from './Breadcrumb/SnippetBreadcrumb.vue';
 
 const currentPath = ref<string[]>(['Home'])
 
-const allFolders = [
-  { name: 'Frontend', path: ['Home'] },
-  { name: 'Backend', path: ['Home'] },
-  { name: 'Vue', path: ['Home', 'Frontend'] },
-]
-
-const isLeafFolder = computed(() =>
-  !allFolders.some(folder =>
-    JSON.stringify(folder.path) === JSON.stringify(currentPath.value)
-      ? false 
-      : JSON.stringify(folder.path.slice(0, currentPath.value.length)) === JSON.stringify(currentPath.value)
-  )
-)
-
-const foldersInCurrent = computed(() =>
-  allFolders.filter(folder =>
-    JSON.stringify(folder.path) === JSON.stringify(currentPath.value)
-  )
-)
-
-const snippetsInCurrent = computed(() =>
-  snippets.filter(snippet =>
-    JSON.stringify(snippet.folderPath ?? ['Home']) === JSON.stringify(currentPath.value)
-  )
-)
-
-function openFolder(name: string) {
-  currentPath.value.push(name)
-}
-
 const { snippets, isAddSnippetActive } = defineProps<{
   snippets: Snippet[],
   isAddSnippetActive: boolean
@@ -74,22 +44,8 @@ function onEditSnippet(snippet: Snippet) {
 <template>
   <div class="min-w-[400px] space-y-4">
     <Breadcrumb class="justify-start"/>
-    <!-- Folders if not a leaf -->
-    <div
-      v-if="!isLeafFolder"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"
-    >
-      <FolderCard
-        v-for="folder in foldersInCurrent"
-        :key="folder.name"
-        :name="folder.name"
-        @click="openFolder(folder.name)"
-      />
-    </div>
-
-    <!-- Snippet list if leaf -->
     <SnippetList
-      v-if="isLeafFolder && snippetsInCurrent.length && !isAddSnippetActive"
+      v-if="!isAddSnippetActive"
       :snippets="snippetsInCurrent"
       @delete-snippet="forwardDeleteSnippet"
       @edit-snippet="onEditSnippet"
@@ -97,7 +53,7 @@ function onEditSnippet(snippet: Snippet) {
 
     <!-- No snippets in leaf -->
     <NoSnippets
-      v-if="isLeafFolder && !snippetsInCurrent.length && !isAddSnippetActive"
+      v-if="!isAddSnippetActive"
       @toggle-add-snippet="onAddSnippet"
     />
 

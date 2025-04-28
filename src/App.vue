@@ -28,13 +28,13 @@ function loadSnippets() {
   //   "shortcut": "/past90_professional"
   // }
   // ];
-try {
-  chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
-    snippets.value = (result.snippets && result.snippets.length > 0) ? result.snippets : [];
-});
-} catch (error) {
-    console.log(error);
-}
+  try {
+    chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
+      snippets.value = (result.snippets && result.snippets.length > 0) ? result.snippets : [];
+  });
+  } catch (error) {
+      console.log(error);
+  }
 }
 
 function handleDeleteSnippet(shortcut: string) {
