@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import NewSnippet from './NewSnippet/NewSnippet.vue';
 import NoSnippets from './NoSnippets/NoSnippets.vue';
 import SnippetList from './SnippetList/SnippetList.vue';
 import type { Snippet } from '@/types/Snippet';
-import FolderCard from './Cards/FolderCard.vue';
 import Breadcrumb from './Breadcrumb/SnippetBreadcrumb.vue';
-
-const currentPath = ref<string[]>(['Home'])
 
 const { snippets, isAddSnippetActive } = defineProps<{
   snippets: Snippet[],
@@ -42,22 +39,18 @@ function onEditSnippet(snippet: Snippet) {
 </script>
 
 <template>
-  <div class="min-w-[400px] space-y-4">
+  <div class="min-w-[400px]">
     <Breadcrumb class="justify-start"/>
     <SnippetList
       v-if="!isAddSnippetActive"
-      :snippets="snippetsInCurrent"
+      :snippets
       @delete-snippet="forwardDeleteSnippet"
       @edit-snippet="onEditSnippet"
     />
-
-    <!-- No snippets in leaf -->
     <NoSnippets
-      v-if="!isAddSnippetActive"
+      v-if="snippets.length == 0 && !isAddSnippetActive"
       @toggle-add-snippet="onAddSnippet"
     />
-
-    <!-- New Snippet form -->
     <div v-if="isAddSnippetActive" class="newSnippetWrapper">
       <NewSnippet
         :initialName="snippetToEdit?.name || ''"

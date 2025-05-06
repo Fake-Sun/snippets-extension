@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref} from 'vue';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { FormControl, FormLabel, FormDescription, FormMessage, FormItem, FormField } from '@/components/ui/form'
@@ -19,6 +19,8 @@ const { snippet } = defineProps<{
   }
 }>();
 
+const snippetName = ref(snippet.initialName);
+
 const emit = defineEmits<{
   (e: 'form-submitted', snippet: Snippet): void;
 }>();
@@ -27,7 +29,7 @@ function onSubmit(snippet: Snippet) {
 }
 
 // Function to be called from the parent component to submit the form programmatically.
-// This is useful for cases where you want to trigger the form submission from a button or other event outside the form.
+// This is to trigger the form submission from a button or other event outside the form.
 function submitForm() {
   handleSubmit(onSubmit)();
 }
@@ -52,6 +54,7 @@ onMounted(() => {
                 type="text"
                 placeholder="Nombre de tu snippet"
                 v-bind="componentField"
+                v-model="snippetName"
               />
             </FormControl>
           </div>

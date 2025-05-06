@@ -52,7 +52,7 @@ function editSnippet() {
 }
 
 .iconsContainer svg:hover {
-  transform: scale(1.4);
+  transform: scale(1.2);
 }
 
 .nameLabel {
