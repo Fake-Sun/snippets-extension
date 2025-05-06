@@ -22,8 +22,8 @@ function forwardSave() {
   emit('snippet-saved');
 }
 
-function forwardDeleteSnippet(shortcut: string) {
-  emit('delete-snippet', shortcut);
+function forwardDeleteSnippet(id: string) {
+  emit('delete-snippet', id);
 }
 
 function onAddSnippet(adding: boolean) {
@@ -56,6 +56,7 @@ function onEditSnippet(snippet: Snippet) {
         :initialName="snippetToEdit?.name || ''"
         :initialText="snippetToEdit?.text || ''"
         :initialShortcut="snippetToEdit?.shortcut || ''"
+        :snippetId="snippetToEdit?.id || ''"
         @snippet-saved="forwardSave"
         @toggle-add-snippet="onAddSnippet"
         @edit-snippet="onEditSnippet"

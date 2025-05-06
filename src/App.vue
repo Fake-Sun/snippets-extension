@@ -37,9 +37,8 @@ function loadSnippets() {
   }
 }
 
-function handleDeleteSnippet(shortcut: string) {
-  // Assuming name is unique for this small, local project.
-  const updatedSnippets = snippets.value.filter(snippet => snippet.shortcut !== shortcut);
+function handleDeleteSnippet(id: string) {
+  const updatedSnippets = snippets.value.filter(snippet => snippet.id !== id);
   chrome.storage.local.set({ snippets: updatedSnippets }, () => {
     snippets.value = updatedSnippets;
   });
@@ -49,7 +48,7 @@ function onAddSnippet() {
   isAddSnippetActive.value = true;
 }
 
-onMounted(() => { loadSnippets() });
+onMounted(() => { loadSnippets(); console.log(snippets) });
 
 </script>
 

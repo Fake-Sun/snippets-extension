@@ -1,90 +1,107 @@
 <script setup lang="ts">
-import { onMounted, ref} from 'vue';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { FormControl, FormLabel, FormDescription, FormMessage, FormItem, FormField } from '@/components/ui/form'
-import { useForm } from 'vee-validate';
-import type { Snippet } from '@/types/Snippet';
-import { formSchema } from './validation';
+import { useForm } from 'vee-validate'
+import { FormField, FormItem, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import type { Snippet } from '@/types/Snippet'
+import { formSchema } from './validation'
 
-const { isFieldDirty, handleSubmit } = useForm({
-  validationSchema: formSchema
+// 1️⃣ receive your incoming snippet
+const props = defineProps<{
+  snippet: {
+    initialName:     string
+    initialShortcut: string
+    initialText:     string
+  }
+}>()
+
+// 2️⃣ set up vee-validate with your schema + seed values
+const { handleSubmit, isFieldDirty } = useForm({
+  validationSchema: formSchema,
+  initialValues: {
+    name:     props.snippet.initialName,
+    shortcut: props.snippet.initialShortcut,
+    text:     props.snippet.initialText,
+  }
 })
 
-const { snippet } = defineProps<{
-  snippet: {
-    initialName: string,
-    initialText: string,
-    initialShortcut: string
-  }
-}>();
-
-const snippetName = ref(snippet.initialName);
-
+// 3️⃣ emit the final Snippet shape on submit
 const emit = defineEmits<{
-  (e: 'form-submitted', snippet: Snippet): void;
-}>();
-function onSubmit(snippet: Snippet) {
-  emit('form-submitted', snippet);
+  (e: 'form-submitted', snippet: Snippet): void
+}>()
+
+function onSubmit(values: { name: string; shortcut: string; text: string }) {
+  emit('form-submitted', {
+    name:     values.name,
+    shortcut: values.shortcut,
+    text:     values.text,
+    id: crypto.randomUUID(),
+  })
 }
 
-// Function to be called from the parent component to submit the form programmatically.
-// This is to trigger the form submission from a button or other event outside the form.
+// 4️⃣ expose for programmatic submission
 function submitForm() {
-  handleSubmit(onSubmit)();
+  handleSubmit(onSubmit)()
 }
-// Expose submitForm so the parent can call it.
-defineExpose({ submitForm });
-
-onMounted(() => {
-  console.log(snippet)
-}) 
+defineExpose({ submitForm })
 </script>
 
 <template>
-  <form :validation-schema="formSchema">
-    <div class="grid items-center w-full gap-4">
-      <FormField v-slot="{ componentField }" name="name" :validate-on-blur="!isFieldDirty">
+  <form @submit.prevent="handleSubmit(onSubmit)">
+    <div class="grid gap-4 w-full">
+      <!-- Nombre -->
+      <FormField
+        name="name"
+        :validate-on-blur="!isFieldDirty('name')"
+        v-slot="{ componentField }"
+      >
         <FormItem>
-          <div class="flex flex-col space-y-1.5">
-            <FormLabel>Nombre</FormLabel>
-            <FormControl>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Nombre de tu snippet"
-                v-bind="componentField"
-                v-model="snippetName"
-              />
-            </FormControl>
-          </div>
-          <FormDescription />
+          <FormLabel>Nombre</FormLabel>
+          <FormControl>
+            <Input
+              id="name"
+              placeholder="Nombre de tu snippet"
+              v-bind="componentField"
+            />
+          </FormControl>
           <FormMessage />
         </FormItem>
       </FormField>
-      <FormField v-slot="{ componentField }" name="shortcut" :validate-on-blur="!isFieldDirty">
+
+      <!-- Atajo -->
+      <FormField
+        name="shortcut"
+        :validate-on-blur="!isFieldDirty('shortcut')"
+        v-slot="{ componentField }"
+      >
         <FormItem>
-          <div class="flex flex-col space-y-1.5">
-            <FormLabel>Atajo</FormLabel>
-            <FormControl>
-              <Input id="shortcut" placeholder="Ejemplo: /atajo" v-bind="componentField"
-              />
-            </FormControl>
-          </div>
-          <FormDescription />
+          <FormLabel>Atajo</FormLabel>
+          <FormControl>
+            <Input
+              id="shortcut"
+              placeholder="Ejemplo: /atajo"
+              v-bind="componentField"
+            />
+          </FormControl>
           <FormMessage />
         </FormItem>
       </FormField>
-      <FormField v-slot="{ componentField }" name="text" :validate-on-blur="!isFieldDirty">
+
+      <!-- Texto -->
+      <FormField
+        name="text"
+        :validate-on-blur="!isFieldDirty('text')"
+        v-slot="{ componentField }"
+      >
         <FormItem>
-          <div class="flex flex-col space-y-1.5">
-            <FormLabel>Texto del snippet</FormLabel>
-            <FormControl>
-              <Textarea id="text" placeholder="El texto que el snippet va a generar." v-bind="componentField" 
-                />
-            </FormControl>
-          </div>
-          <FormDescription />
+          <FormLabel>Texto del snippet</FormLabel>
+          <FormControl>
+            <Textarea
+              id="text"
+              placeholder="El texto que el snippet va a generar."
+              v-bind="componentField"
+            />
+          </FormControl>
           <FormMessage />
         </FormItem>
       </FormField>
@@ -95,10 +112,8 @@ onMounted(() => {
 <style scoped>
 #text {
   resize: none;
-  field-sizing: content;
   max-height: 135px;
   width: 100%;
-  max-width: 300px;
   box-sizing: border-box;
 }
 </style>

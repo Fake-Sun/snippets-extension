@@ -18,6 +18,7 @@ const snippet = defineProps<{
   initialName: string,
   initialText: string,
   initialShortcut: string
+  snippetId: string
 }>();
 
 const emit = defineEmits<{ 
@@ -39,8 +40,8 @@ function handleSave(snippet: Snippet) {
     name: snippet.name,
     text: snippet.text,
     shortcut: snippet.shortcut,
+    id: snippet.id,
   };
-
   chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
     const currentSnippets: Snippet[] = result.snippets || [];
     currentSnippets.push(newSnippet);
