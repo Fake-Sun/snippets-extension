@@ -54,7 +54,7 @@ onMounted(() => { loadSnippets(); console.log(snippets) });
 
 <template>
   <SnippetNav @add-snippet="onAddSnippet"/>
-  <div class="managerContainer p-4 w-full">
+  <div class="managerContainer w-full">
     <SnippetManager
     :snippets
     :is-add-snippet-active="isAddSnippetActive" 
