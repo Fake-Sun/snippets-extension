@@ -13,7 +13,7 @@ const emit = defineEmits<{
 
 <template>
 
-  <div class="wrapper p-4 flex flex-col space-y-2 justify-items-center" >
+  <div class="wrapper p-4 pt-0 flex flex-col space-y-2 justify-items-center" >
     <SnippetCard
       v-for="snippet in snippets"
       :key="snippet.shortcut"

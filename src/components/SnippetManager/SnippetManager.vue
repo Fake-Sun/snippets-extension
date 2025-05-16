@@ -40,7 +40,7 @@ function onEditSnippet(snippet: Snippet) {
 
 <template>
   <div class="min-w-[400px]">
-    <Breadcrumb class="justify-start px-2 pt-2"/>
+    <Breadcrumb class="justify-start p-2"/>
     <SnippetList
       v-if="!isAddSnippetActive"
       :snippets
