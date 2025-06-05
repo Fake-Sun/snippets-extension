@@ -5,7 +5,7 @@ export const snippetFormSchema = toTypedSchema(z.object({
   name: z.string({ 
     required_error: "Nombre es obligatorio."
   }).min(3, "Nombre necesita al menos 3 caracteres.")
-    .max(50, "Nombre no puede contener mas de 50 caracteres.")
+    .max(50, "Nombre no puede contener más de 50 caracteres.")
     // Transform to replace new lines with spaces
     .transform(value => value.replace(/[\r\n]+/g, ' ')),
 
