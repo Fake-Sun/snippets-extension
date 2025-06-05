@@ -10,6 +10,7 @@ import SnippetNav from './components/SnippetNav.vue'
 const snippets = ref<Snippet[]>([]);
 // const currentFolder = ref<Folder>();
 const isAddSnippetActive = ref(false);
+const isAddFolderActive = ref(false);
 
 function loadSnippets() {
   // snippets.value = [
@@ -47,20 +48,25 @@ function handleDeleteSnippet(id: string) {
 function onAddSnippet() {
   isAddSnippetActive.value = true;
 }
+function onAddFolder() {
+  isAddFolderActive.value = true;
+}
 
-onMounted(() => { loadSnippets(); console.log(snippets) });
+onMounted(() => { loadSnippets(); });
 
 </script>
 
 <template>
-  <SnippetNav @add-snippet="onAddSnippet"/>
+  <SnippetNav @add-snippet="onAddSnippet" @add-folder="onAddFolder"/>
   <div class="managerContainer w-full">
     <SnippetManager
     :snippets
-    :is-add-snippet-active="isAddSnippetActive" 
+    :is-add-snippet-active="isAddSnippetActive"
+    :is-add-folder-active="isAddSnippetActive"
     @snippet-saved="loadSnippets"
     @delete-snippet="handleDeleteSnippet"
     @toggle-add-snippet="val => isAddSnippetActive = val"
+    @toggle-add-folder="val => isAddFolderActive = val"
     />
   </div>
 </template>

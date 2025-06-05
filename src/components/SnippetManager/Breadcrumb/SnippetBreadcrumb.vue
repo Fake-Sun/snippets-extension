@@ -18,7 +18,7 @@ import { House } from 'lucide-vue-next'
 </script>
 
 <template>
-  <Breadcrumb>
+  <!-- <Breadcrumb>
     <BreadcrumbList>
       <BreadcrumbItem>
         <House :size="20" class="clickable"/>
@@ -48,7 +48,7 @@ import { House } from 'lucide-vue-next'
         <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
       </BreadcrumbItem>
     </BreadcrumbList>
-  </Breadcrumb>
+  </Breadcrumb> -->
 </template>
 
 <style scoped>

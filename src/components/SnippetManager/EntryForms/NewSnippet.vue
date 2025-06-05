@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card'
 import type { Snippet } from '@/types/Snippet'
 import { ref } from 'vue'
-import SnippetForm from './../Form/SnippetForm.vue'
+import SnippetForm from '../FormsStructure/SnippetForm.vue'
 import NewYorkH3 from '@/components/Typography/NewYorkH3.vue'
 
 const snippetFormRef = ref<InstanceType<typeof SnippetForm> | null>(null);

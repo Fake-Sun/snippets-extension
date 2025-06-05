@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import NewSnippet from './NewSnippet/NewSnippet.vue';
+import NewSnippet from './EntryForms/NewSnippet.vue';
 import NoSnippets from './NoSnippets/NoSnippets.vue';
 import SnippetList from './SnippetList/SnippetList.vue';
 import type { Snippet } from '@/types/Snippet';
@@ -16,6 +16,7 @@ const emit = defineEmits<{
   (e: 'delete-snippet', identifier: string): void;
   (e: 'toggle-add-snippet', value: boolean): void;
   (e: 'edit-snippet', snippet: Snippet): void;
+  (e: 'toggle-add-folder', value: boolean): void;
 }>();
 
 function forwardSave() {

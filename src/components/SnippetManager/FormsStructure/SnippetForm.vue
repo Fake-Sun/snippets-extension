@@ -4,7 +4,7 @@ import { FormField, FormItem, FormControl, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import type { Snippet } from '@/types/Snippet'
-import { formSchema } from './validation'
+import { snippetFormSchema } from './validation'
 
 // 1️⃣ receive your incoming snippet
 const props = defineProps<{
@@ -17,7 +17,7 @@ const props = defineProps<{
 
 // 2️⃣ set up vee-validate with your schema + seed values
 const { handleSubmit, isFieldDirty } = useForm({
-  validationSchema: formSchema,
+  validationSchema: snippetFormSchema,
   initialValues: {
     name:     props.snippet.initialName,
     shortcut: props.snippet.initialShortcut,
@@ -30,7 +30,7 @@ const emit = defineEmits<{
   (e: 'form-submitted', snippet: Snippet): void
 }>()
 
-function onSubmit(values: { name: string; shortcut: string; text: string }) {
+function onSubmit(values: { name: string, shortcut: string, text: string }) {
   emit('form-submitted', {
     name:     values.name,
     shortcut: values.shortcut,
