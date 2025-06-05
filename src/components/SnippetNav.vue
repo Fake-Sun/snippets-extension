@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CirclePlus, FolderPlus } from 'lucide-vue-next';
+import { CirclePlus } from 'lucide-vue-next';
 import { Label } from '@/components/ui/label';
 
 const emit = defineEmits<{

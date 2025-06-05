@@ -17,7 +17,7 @@ const emit = defineEmits<{
 }>()
 
 function deleteSnippet() {
-  emit('delete-snippet', snippet.shortcut)
+  emit('delete-snippet', snippet.id)
 }
 
 function editSnippet() {
