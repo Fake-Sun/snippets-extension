@@ -8,7 +8,7 @@ import {
   CardHeader,
 } from '@/components/ui/card'
 import type { Snippet } from '@/types/Snippet'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import SnippetForm from '../FormsStructure/SnippetForm.vue'
 import NewYorkH3 from '@/components/Typography/NewYorkH3.vue'
 
@@ -20,6 +20,8 @@ const snippet = defineProps<{
   initialShortcut: string
   snippetId: string
 }>();
+
+const isEditing = computed(() => snippet.snippetId !== '');
 
 const emit = defineEmits<{ 
   (e: 'toggle-add-snippet', value: boolean): void;
@@ -35,16 +37,31 @@ function onCancelButtonClick() {
   emit('toggle-add-snippet', false);
 }
 
-function handleSave(snippet: Snippet) {
-  const newSnippet: Snippet = {
-    name: snippet.name,
-    text: snippet.text,
-    shortcut: snippet.shortcut,
-    id: snippet.id,
+function snippetIdForSave(generatedId: string) {
+  return snippet.snippetId || generatedId;
+}
+
+function handleSave(snippetData: Snippet) {
+  const updatedSnippet: Snippet = {
+    name: snippetData.name,
+    text: snippetData.text,
+    shortcut: snippetData.shortcut,
+    id: snippetIdForSave(snippetData.id),
   };
+
   chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
     const currentSnippets: Snippet[] = result.snippets || [];
-    currentSnippets.push(newSnippet);
+
+    if (isEditing.value) {
+      const index = currentSnippets.findIndex(s => s.id === snippet.snippetId);
+      if (index !== -1) {
+        currentSnippets[index] = updatedSnippet;
+      } else {
+        currentSnippets.push(updatedSnippet);
+      }
+    } else {
+      currentSnippets.push(updatedSnippet);
+    }
 
     chrome.storage.local.set({ snippets: currentSnippets }, () => {
       emit('snippet-saved');
@@ -57,8 +74,10 @@ function handleSave(snippet: Snippet) {
 <template>
   <Card class="w-[350px]">
     <CardHeader>
-      <NewYorkH3>Crear snippet</NewYorkH3>
-      <CardDescription>Guardar nuevo snippet.</CardDescription>
+      <NewYorkH3>{{ isEditing ? 'Editar snippet' : 'Crear snippet' }}</NewYorkH3>
+      <CardDescription>
+        {{ isEditing ? 'Guardar cambios del snippet.' : 'Guardar nuevo snippet.' }}
+      </CardDescription>
     </CardHeader>
     <CardContent>
       <SnippetForm ref="snippetFormRef" @form-submitted="handleSave" :snippet/> 

@@ -28,6 +28,9 @@ function forwardDeleteSnippet(id: string) {
 }
 
 function onAddSnippet(adding: boolean) {
+  if (!adding) {
+    snippetToEdit.value = null;
+  }
   emit('toggle-add-snippet', adding);
 }
 
