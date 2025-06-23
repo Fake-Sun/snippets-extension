@@ -36,14 +36,20 @@ function onCancelButtonClick() {
 }
 
 function handleSave(snippet: Snippet) {
+  console.log(snippet);
   const newSnippet: Snippet = {
-    name: snippet.name,
-    text: snippet.text,
-    shortcut: snippet.shortcut,
     id: snippet.id,
+    name: snippet.name,
+    shortcut: snippet.shortcut,
+    text: snippet.text,
   };
   chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
     const currentSnippets: Snippet[] = result.snippets || [];
+    currentSnippets.findIndex( search => {
+      console.log("Stored snippets:", currentSnippets);
+      console.log("New snippet:", newSnippet);
+      return search.id === newSnippet.id;
+    });
     currentSnippets.push(newSnippet);
 
     chrome.storage.local.set({ snippets: currentSnippets }, () => {

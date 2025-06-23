@@ -1,24 +1,24 @@
 <script lang="ts" setup>
-import {
-  Breadcrumb,
-  BreadcrumbEllipsis,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { House } from 'lucide-vue-next'
+// import {
+//   Breadcrumb,
+//   BreadcrumbEllipsis,
+//   BreadcrumbItem,
+//   BreadcrumbLink,
+//   BreadcrumbList,
+//   BreadcrumbPage,
+//   BreadcrumbSeparator,
+// } from '@/components/ui/breadcrumb'
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuTrigger,
+// } from '@/components/ui/dropdown-menu'
+// import { House } from 'lucide-vue-next'
 </script>
 
-<template>
-  <!-- <Breadcrumb>
+<!-- <template>
+  <Breadcrumb>
     <BreadcrumbList>
       <BreadcrumbItem>
         <House :size="20" class="clickable"/>
@@ -48,8 +48,8 @@ import { House } from 'lucide-vue-next'
         <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
       </BreadcrumbItem>
     </BreadcrumbList>
-  </Breadcrumb> -->
-</template>
+  </Breadcrumb>
+</template> -->
 
 <style scoped>
 .clickable {

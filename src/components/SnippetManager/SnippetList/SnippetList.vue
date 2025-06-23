@@ -2,7 +2,6 @@
 import type { Snippet } from '@/types/Snippet';
 import SnippetCard from '../Cards/SnippetCard.vue';
 
-
 const { snippets } = defineProps<{snippets: Snippet[]}>();
 
 const emit = defineEmits<{
@@ -12,7 +11,6 @@ const emit = defineEmits<{
 </script>
 
 <template>
-
   <div class="wrapper p-4 flex flex-col space-y-2 justify-items-center" >
     <SnippetCard
       v-for="snippet in snippets"

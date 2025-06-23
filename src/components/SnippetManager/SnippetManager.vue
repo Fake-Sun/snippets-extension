@@ -43,7 +43,7 @@ function onEditSnippet(snippet: Snippet) {
   <div class="min-w-[400px]">
     <Breadcrumb class="justify-start p-2"/>
     <SnippetList
-      v-if="!isAddSnippetActive"
+      v-if="!isAddSnippetActive && snippets.length > 0"
       :snippets
       @delete-snippet="forwardDeleteSnippet"
       @edit-snippet="onEditSnippet"

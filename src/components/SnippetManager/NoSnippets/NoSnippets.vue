@@ -8,11 +8,10 @@ function onButtonClick() {
   // Emit event to update isAddSnippetActive.
   emit('toggle-add-snippet', true);
 }
-
 </script>
 
 <template>
-  <div class="contentWrapper">
+  <div class="contentWrapper p-6">
     <div class="title">
       <NewYorkH3>No tienes snippets</NewYorkH3>
     </div>

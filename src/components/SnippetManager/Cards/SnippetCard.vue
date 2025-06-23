@@ -50,11 +50,9 @@ function editSnippet() {
   cursor: pointer;
   transition: transform 0.15s;
 }
-
 .iconsContainer svg:hover {
   transform: scale(1.2);
 }
-
 .nameLabel {
   display: inline-block;
   width: 20ch;
@@ -82,7 +80,6 @@ function editSnippet() {
   box-sizing: border-box;
   max-width: 19ch; /* overall badge width */
 }
-
 .badge-text {
   display: block;
   white-space: nowrap;
@@ -91,7 +88,6 @@ function editSnippet() {
   font-size: 12px;
   pointer-events: none;
 }
-
 .snippet-text {
   white-space: nowrap;
   overflow: hidden;

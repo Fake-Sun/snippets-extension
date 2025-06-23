@@ -31,11 +31,12 @@ const emit = defineEmits<{
 }>()
 
 function onSubmit(values: { name: string, shortcut: string, text: string }) {
+  const id = crypto.randomUUID();
   emit('form-submitted', {
     name:     values.name,
     shortcut: values.shortcut,
     text:     values.text,
-    id: crypto.randomUUID(),
+    id,
   })
 }
 
@@ -67,7 +68,6 @@ defineExpose({ submitForm })
           <FormMessage />
         </FormItem>
       </FormField>
-
       <!-- Atajo -->
       <FormField
         name="shortcut"
@@ -86,7 +86,6 @@ defineExpose({ submitForm })
           <FormMessage />
         </FormItem>
       </FormField>
-
       <!-- Texto -->
       <FormField
         name="text"
