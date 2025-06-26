@@ -4,7 +4,6 @@ import { Label } from '@/components/ui/label';
 
 const emit = defineEmits<{
   (e: 'add-snippet', value: boolean): void;
-  (e: 'add-folder', value: boolean): void;
 }>();
 
 const emitNewSnippet = () => {

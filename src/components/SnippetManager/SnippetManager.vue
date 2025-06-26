@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import NewSnippet from './EntryForms/SnippetEntry.vue';
+import SnippetEntry from './EntryForms/SnippetEntry.vue';
 import NoSnippets from './NoSnippets/NoSnippets.vue';
 import SnippetList from './SnippetList/SnippetList.vue';
 import type { Snippet } from '@/types/Snippet';
@@ -53,7 +53,7 @@ function onEditSnippet(snippet: Snippet) {
       @toggle-add-snippet="onAddSnippet"
     />
     <div v-if="isAddSnippetActive" class="newSnippetWrapper">
-      <NewSnippet
+      <SnippetEntry
         :initialName="snippetToEdit?.name || ''"
         :initialText="snippetToEdit?.text || ''"
         :initialShortcut="snippetToEdit?.shortcut || ''"

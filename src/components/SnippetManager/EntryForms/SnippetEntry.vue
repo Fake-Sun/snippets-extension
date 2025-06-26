@@ -14,6 +14,9 @@ import NewYorkH3 from '@/components/Typography/NewYorkH3.vue'
 
 const snippetFormRef = ref<InstanceType<typeof SnippetForm> | null>(null);
 
+// TODO: Make it so that the initial values are dynamically set based on the snippetId prop.
+// This will allow the form to be used for both creating and editing snippets.
+
 const snippet = defineProps<{
   initialName: string,
   initialText: string,
@@ -35,22 +38,24 @@ function onCancelButtonClick() {
   emit('toggle-add-snippet', false);
 }
 
-function handleSave(snippet: Snippet) {
-  console.log(snippet);
+function handleSave(s: Snippet) {
   const newSnippet: Snippet = {
-    id: snippet.id,
-    name: snippet.name,
-    shortcut: snippet.shortcut,
-    text: snippet.text,
+    id: s.id,
+    name: s.name,
+    shortcut: s.shortcut,
+    text: s.text,
   };
   chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
     const currentSnippets: Snippet[] = result.snippets || [];
-    currentSnippets.findIndex( search => {
-      console.log("Stored snippets:", currentSnippets);
-      console.log("New snippet:", newSnippet);
-      return search.id === newSnippet.id;
-    });
-    currentSnippets.push(newSnippet);
+    let i = currentSnippets.findIndex( search =>  snippet.snippetId === search.id );
+    if (i === -1) {
+      // If the snippet is not found, add it to the end of the array.
+      currentSnippets.push(newSnippet);
+    }
+    else {
+      // If the snippet is found, update it.
+      currentSnippets[i] = newSnippet;
+    }
 
     chrome.storage.local.set({ snippets: currentSnippets }, () => {
       emit('snippet-saved');

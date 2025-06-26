@@ -31,18 +31,17 @@ const emit = defineEmits<{
 }>()
 
 function onSubmit(values: { name: string, shortcut: string, text: string }) {
-  const id = crypto.randomUUID();
   emit('form-submitted', {
     name:     values.name,
     shortcut: values.shortcut,
     text:     values.text,
-    id,
-  })
+    id: crypto.randomUUID(),
+  });
 }
 
 // 4️⃣ expose for programmatic submission
 function submitForm() {
-  handleSubmit(onSubmit)()
+  handleSubmit(onSubmit)();
 }
 defineExpose({ submitForm })
 </script>
