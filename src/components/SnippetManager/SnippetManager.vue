@@ -68,6 +68,7 @@ function onEditSnippet(snippet: Snippet) {
         @toggle-add-snippet="onAddSnippet"
         @edit-snippet="onEditSnippet"
         @cancel-clicked="onCancelSnippet"
+        :snippets
       />
     </div>
   </div>
