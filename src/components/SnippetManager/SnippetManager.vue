@@ -4,7 +4,7 @@ import SnippetEntry from './EntryForms/SnippetEntry.vue';
 import NoSnippets from './NoSnippets/NoSnippets.vue';
 import SnippetList from './SnippetList/SnippetList.vue';
 import type { Snippet } from '@/types/Snippet';
-import Breadcrumb from './Breadcrumb/SnippetBreadcrumb.vue';
+// import SnippetBreadCrumb from './Breadcrumb/SnippetBreadcrumb.vue';
 
 const { snippets, isAddSnippetActive } = defineProps<{
   snippets: Snippet[],
@@ -20,6 +20,7 @@ const emit = defineEmits<{
 }>();
 
 function forwardSave() {
+  snippetToEdit.value = null; // Reset the snippet to edit after saving
   emit('snippet-saved');
 }
 
@@ -29,6 +30,11 @@ function forwardDeleteSnippet(id: string) {
 
 function onAddSnippet(adding: boolean) {
   emit('toggle-add-snippet', adding);
+}
+
+function onCancelSnippet() {
+  snippetToEdit.value = null; // Reset the snippet to edit when canceling
+  emit('toggle-add-snippet', false);
 }
 
 const snippetToEdit = ref<Snippet | null>(null);
@@ -41,7 +47,7 @@ function onEditSnippet(snippet: Snippet) {
 
 <template>
   <div class="min-w-[400px]">
-    <Breadcrumb class="justify-start p-2"/>
+    <!-- <SnippetBreadCrumb class="justify-start p-2"/> -->
     <SnippetList
       v-if="!isAddSnippetActive && snippets.length > 0"
       :snippets
@@ -61,6 +67,7 @@ function onEditSnippet(snippet: Snippet) {
         @snippet-saved="forwardSave"
         @toggle-add-snippet="onAddSnippet"
         @edit-snippet="onEditSnippet"
+        @cancel-clicked="onCancelSnippet"
       />
     </div>
   </div>

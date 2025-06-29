@@ -27,6 +27,7 @@ const snippet = defineProps<{
 const emit = defineEmits<{ 
   (e: 'toggle-add-snippet', value: boolean): void;
   (e: 'snippet-saved'): void
+  (e: 'cancel-clicked'): void;
 }>();
 
 function onSaveButtonClick() {
@@ -35,6 +36,7 @@ function onSaveButtonClick() {
 }
 
 function onCancelButtonClick() {
+  emit('cancel-clicked')
   emit('toggle-add-snippet', false);
 }
 
@@ -56,7 +58,8 @@ function handleSave(s: Snippet) {
       // If the snippet is found, update it.
       currentSnippets[i] = newSnippet;
     }
-
+    // Update the storage with the new snippet.
+    // This will overwrite the existing snippets with the new array.
     chrome.storage.local.set({ snippets: currentSnippets }, () => {
       emit('snippet-saved');
       emit('toggle-add-snippet', false);
