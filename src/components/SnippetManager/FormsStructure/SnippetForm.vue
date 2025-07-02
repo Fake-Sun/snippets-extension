@@ -8,6 +8,7 @@ import { snippetFormSchema } from './validation'
 
 // 1️⃣ receive your incoming snippet
 const props = defineProps<{
+  snippets: Snippet[],
   snippet: {
     initialName:     string
     initialShortcut: string

@@ -8,7 +8,7 @@ import {
   CardHeader,
 } from '@/components/ui/card'
 import type { Snippet } from '@/types/Snippet'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import SnippetForm from '../FormsStructure/SnippetForm.vue'
 import NewYorkH3 from '@/components/Typography/NewYorkH3.vue'
 
@@ -18,10 +18,10 @@ const snippetFormRef = ref<InstanceType<typeof SnippetForm> | null>(null);
 // This will allow the form to be used for both creating and editing snippets.
 
 const snippet = defineProps<{
-  initialName: string,
-  initialText: string,
-  initialShortcut: string
-  snippetId: string
+    initialName: string,
+    initialText: string,
+    initialShortcut: string
+    snippetId: string
 }>();
 
 const emit = defineEmits<{ 
@@ -66,6 +66,13 @@ function handleSave(s: Snippet) {
     });
   });
 }
+
+const snippets = ref<Snippet[]>([]);
+onMounted(() => {
+  chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
+    snippets.value = result.snippets || [];
+  });
+});
 </script>
 
 <template>
@@ -75,7 +82,7 @@ function handleSave(s: Snippet) {
       <CardDescription>Guardar nuevo snippet.</CardDescription>
     </CardHeader>
     <CardContent>
-      <SnippetForm ref="snippetFormRef" @form-submitted="handleSave" :snippet/> 
+      <SnippetForm ref="snippetFormRef" @form-submitted="handleSave" :snippets :snippet/> 
     </CardContent>
     <CardFooter class="flex justify-between px-6 ">
       <Button variant="outline" @click="onCancelButtonClick">
