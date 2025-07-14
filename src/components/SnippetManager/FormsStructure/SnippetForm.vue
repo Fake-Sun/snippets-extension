@@ -4,7 +4,8 @@ import { FormField, FormItem, FormControl, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import type { Snippet } from '@/types/Snippet'
-import { snippetFormSchema } from './validation'
+import { createSnippetFormSchema } from './validation'
+import { toRaw, computed } from 'vue'
 
 // 1️⃣ receive your incoming snippet
 const props = defineProps<{
@@ -16,9 +17,16 @@ const props = defineProps<{
   }
 }>()
 
+// Convert the snippets prop to a raw object for validation
+// This is necessary because vee-validate needs to work with a plain object
+const rawSnippets = computed(() => toRaw(props.snippets));
+
+// ❗ schema is regenerated when `props.snippets` changes
+const schema = computed(() => createSnippetFormSchema(rawSnippets.value));
+
 // 2️⃣ set up vee-validate with your schema + seed values
 const { handleSubmit, isFieldDirty } = useForm({
-  validationSchema: snippetFormSchema,
+  validationSchema: schema,
   initialValues: {
     name:     props.snippet.initialName,
     shortcut: props.snippet.initialShortcut,
