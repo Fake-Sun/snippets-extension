@@ -14,6 +14,7 @@ const props = defineProps<{
     initialName:     string
     initialShortcut: string
     initialText:     string
+    snippetId:      string
   }
 }>()
 
@@ -22,7 +23,7 @@ const props = defineProps<{
 const rawSnippets = computed(() => toRaw(props.snippets));
 
 // ❗ schema is regenerated when `props.snippets` changes
-const schema = computed(() => createSnippetFormSchema(rawSnippets.value));
+const schema = computed(() => createSnippetFormSchema(rawSnippets.value, props.snippet.snippetId));
 
 // 2️⃣ set up vee-validate with your schema + seed values
 const { handleSubmit, isFieldDirty } = useForm({

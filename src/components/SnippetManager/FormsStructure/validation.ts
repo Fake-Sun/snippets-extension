@@ -2,7 +2,7 @@ import {z} from 'zod'
 import { toTypedSchema } from '@vee-validate/zod';
 import type { Snippet } from '../../../types/Snippet';
 
-export function createSnippetFormSchema(snippets: Snippet[]) {
+export function createSnippetFormSchema(snippets: Snippet[], snippetId?: string) {
   return toTypedSchema(z.object({
     name: z.string({ 
       required_error: "Nombre es obligatorio."
@@ -20,9 +20,9 @@ export function createSnippetFormSchema(snippets: Snippet[]) {
       .regex(/^\/\S*$/, "Atajo no puede contener espacios.")
       // Validate that the shortcut is unique among existing snippets
       .refine((value) => {
-        return !snippets.some(snippet => snippet.shortcut === value);
+        return !snippets.some(snippet => snippet.shortcut === value && snippet.id !== snippetId);
       }, {
-        message: "Este atajo ya está en uso.",
+        message: "Este atajo ya existe.",
       })
       .transform(value => value.toLowerCase()),
 
