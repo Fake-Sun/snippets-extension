@@ -4,5 +4,13 @@
   "version": "1.0.0",
   "action": { "default_popup": "index.html" },
   "host_permissions": ["<all_urls>"],
-  "permissions": ["storage"]
+  "permissions": ["storage", "scripting"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["scripts/content.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ]
 }
