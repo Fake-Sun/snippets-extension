@@ -77,7 +77,7 @@ function onEditSnippet(snippet: Snippet) {
 
 <style scoped>
 .newSnippetWrapper {
-  padding: 5px;
+  padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
