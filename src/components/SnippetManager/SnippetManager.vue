@@ -46,7 +46,7 @@ function onEditSnippet(snippet: Snippet) {
 </script>
 
 <template>
-  <div class="min-w-[400px]">
+  <div class="min-w-[400px] max-w-[500px]">
     <!-- <SnippetBreadCrumb class="justify-start p-2"/> -->
     <SnippetList
       v-if="!isAddSnippetActive && snippets.length > 0"

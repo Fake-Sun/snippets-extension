@@ -28,7 +28,7 @@ function editSnippet() {
 
 <template>
 <Card>
-  <CardHeader class="gap-0 p-4 max-w-[400px]">
+  <CardHeader class="gap-0 p-4">
     <div class="header-content">
       <Label for="cardDescription" class="nameLabel">{{ snippet.name }}</Label>
       <div class="iconsContainer">
