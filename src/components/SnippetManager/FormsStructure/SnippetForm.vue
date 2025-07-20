@@ -121,7 +121,9 @@ defineExpose({ submitForm })
 #text {
   resize: none;
   max-height: 135px;
+  max-width: 300px;
   width: 100%;
   box-sizing: border-box;
+  field-sizing: content;
 }
 </style>

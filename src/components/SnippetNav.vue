@@ -12,10 +12,12 @@ const emitNewSnippet = () => {
 </script>
 
 <template>
-  <div class="h-14 w-full bg-primary flex flex-row-reverse items-center">
-    <div class="p-2 flex items-center gap-2 newSnippetWrapper clickable m-3" @click="emitNewSnippet">
+  <div class="h-14 w-full bg-primary flex flex-row items-center space-between justify-between p-4">
+    <img src="../assets/SnipplyLogo.png" alt="Snipply Logo" class="w-24 h-auto" />
+    <!-- Need to add v-if statement to the element below, so if we're creating a new snippet, it will not show the "Create Snippet" button. -->
+    <div class="p-1 flex items-center gap-2 newSnippetWrapper clickable" @click="emitNewSnippet">
       <Label style="color: white" class="clickable">Crear Snippet</Label>
-      <CirclePlus :size="27" absoluteStrokeWidth color="white" class="clickable"/>
+      <CirclePlus :size="25" absoluteStrokeWidth color="white" class="clickable"/>
     </div>
   </div>
 </template>
@@ -32,6 +34,7 @@ const emitNewSnippet = () => {
 
 }
 .clickable {
+  font-size: 0.8rem;
   cursor: pointer;
 }
 </style>

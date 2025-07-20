@@ -7,7 +7,8 @@ import {
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import type { Snippet } from '@/types/Snippet';
-import { Pencil, Trash2 } from 'lucide-vue-next'
+import { Pencil } from 'lucide-vue-next'
+import DeleteSnippetButton from '../DeleteSnippetButton/DeleteSnippetButton.vue';
 
 const snippet = defineProps<Snippet>()
 
@@ -27,12 +28,16 @@ function editSnippet() {
 
 <template>
 <Card>
-  <CardHeader class="gap-0 p-4">
+  <CardHeader class="gap-0 p-4 max-w-[400px]">
     <div class="header-content">
       <Label for="cardDescription" class="nameLabel">{{ snippet.name }}</Label>
       <div class="iconsContainer">
         <Pencil :size="20" absoluteStrokeWidth @click="editSnippet"/>
-        <Trash2 :size="20" absoluteStrokeWidth @click="deleteSnippet"/>
+        <DeleteSnippetButton
+          :snippet-id="snippet.id"
+          :snippet-name="snippet.name"
+          @confirm-delete="deleteSnippet"
+        />
         <Badge class="shortcut-badge text-sm">
             <span class="badge-text">
               {{ snippet.shortcut }}
@@ -46,11 +51,11 @@ function editSnippet() {
 </template>
 
 <style scoped>
-.iconsContainer svg {
+:deep(.iconsContainer) svg {
   cursor: pointer;
   transition: transform 0.15s;
 }
-.iconsContainer svg:hover {
+:deep(.iconsContainer) svg:hover {
   transform: scale(1.2);
 }
 .nameLabel {
@@ -96,3 +101,4 @@ function editSnippet() {
   pointer-events: none;
 }
 </style>
+  

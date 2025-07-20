@@ -78,8 +78,12 @@ onMounted(() => {
 <template>
   <Card class="w-[350px]">
     <CardHeader>
-      <NewYorkH3>Crear snippet</NewYorkH3>
-      <CardDescription>Guardar nuevo snippet.</CardDescription>
+      <NewYorkH3>
+        {{ snippet.snippetId !== '' ? 'Editar Snippet' : 'Nuevo Snippet' }}
+      </NewYorkH3>
+      <CardDescription>
+        {{ snippet.snippetId !== '' ? 'Guardar cambios a snippet.' : 'Guardar nuevo snippet.' }}
+      </CardDescription>
     </CardHeader>
     <CardContent>
       <SnippetForm ref="snippetFormRef" @form-submitted="handleSave" :snippets :snippet/> 
@@ -88,7 +92,9 @@ onMounted(() => {
       <Button variant="outline" @click="onCancelButtonClick">
         Cancelar
       </Button>
-      <Button @click="onSaveButtonClick">Guardar</Button>
+      <Button @click="onSaveButtonClick">
+        {{ snippet.snippetId !== '' ? 'Guardar cambios' : 'Guardar' }}
+      </Button>
     </CardFooter>
   </Card>
 </template>
