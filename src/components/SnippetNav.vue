@@ -8,13 +8,18 @@ const emit = defineEmits<{
 const emitNewSnippet = () => {
   emit('add-snippet', true);
 }
+
+const { isAddSnippetActive } = defineProps<{
+  isAddSnippetActive: boolean
+}>();
+
 </script>
 
 <template>
   <div class="h-14 w-full bg-primary flex flex-row items-center space-between justify-between p-4">
     <img src="../assets/SnipplyLogo.png" alt="Snipply Logo" class="w-[7rem] h-auto" />
     <!-- Need to add v-if statement to the element below, so if we're creating a new snippet, it will not show the "Create Snippet" button. -->
-    <div class="p-1 flex items-center gap-2 newSnippetWrapper clickable" @click="emitNewSnippet"> 
+    <div v-if="!isAddSnippetActive" class="p-1 flex items-center gap-2 newSnippetWrapper clickable" @click="emitNewSnippet"> 
       <Plus :size="22" absoluteStrokeWidth color="white" class="clickable"/>
     </div>
   </div>

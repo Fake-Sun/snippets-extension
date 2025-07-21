@@ -57,7 +57,7 @@ onMounted(() => { loadSnippets(); });
 </script>
 
 <template>
-  <SnippetNav @add-snippet="onAddSnippet" @add-folder="onAddFolder"/>
+  <SnippetNav :isAddSnippetActive @add-snippet="onAddSnippet" @add-folder="onAddFolder"/>
   <div class="managerContainer w-full">
     <SnippetManager
     :snippets
