@@ -48,21 +48,17 @@ function handleDeleteSnippet(id: string) {
 function onAddSnippet() {
   isAddSnippetActive.value = true;
 }
-function onAddFolder() {
-  isAddFolderActive.value = true;
-}
 
 onMounted(() => { loadSnippets(); });
 
 </script>
 
 <template>
-  <SnippetNav :isAddSnippetActive @add-snippet="onAddSnippet" @add-folder="onAddFolder"/>
+  <SnippetNav :isAddSnippetActive @add-snippet="onAddSnippet"/>
   <div class="managerContainer w-full">
     <SnippetManager
     :snippets
     :is-add-snippet-active="isAddSnippetActive"
-    :is-add-folder-active="isAddSnippetActive"
     @snippet-saved="loadSnippets"
     @delete-snippet="handleDeleteSnippet"
     @toggle-add-snippet="val => isAddSnippetActive = val"

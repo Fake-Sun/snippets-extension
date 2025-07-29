@@ -4,6 +4,8 @@ import SnippetEntry from './EntryForms/SnippetEntry.vue';
 import NoSnippets from './NoSnippets/NoSnippets.vue';
 import SnippetList from './SnippetList/SnippetList.vue';
 import type { Snippet } from '@/types/Snippet';
+import { SidebarProvider } from "@/components/ui/sidebar";
+import SnippetsSidebar from './SnippetsSidebar/SnippetsSidebar.vue';
 // import SnippetBreadCrumb from './Breadcrumb/SnippetBreadcrumb.vue';
 
 const { snippets, isAddSnippetActive } = defineProps<{
@@ -46,6 +48,12 @@ function onEditSnippet(snippet: Snippet) {
 </script>
 
 <template>
+    <SidebarProvider class="" v-if="!isAddSnippetActive">
+    <SnippetsSidebar class="bg-white"/>
+    <main >
+      <slot />
+    </main>
+  </SidebarProvider>
   <div class="min-w-[400px] max-w-[500px]">
     <!-- <SnippetBreadCrumb class="justify-start p-2"/> -->
     <SnippetList

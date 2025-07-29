@@ -26,6 +26,10 @@ const { isAddSnippetActive } = defineProps<{
 </template>
 
 <style scoped>
+div img {
+  pointer-events: none;
+}
+
 .newSnippetWrapper {
   transition: transform 0.25s;
   border: 2px solid white;
