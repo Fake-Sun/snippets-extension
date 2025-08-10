@@ -48,12 +48,14 @@ function onEditSnippet(snippet: Snippet) {
 </script>
 
 <template>
-    <SidebarProvider class="" v-if="!isAddSnippetActive">
-    <SnippetsSidebar class="bg-white"/>
-    <main >
-      <slot />
-    </main>
-  </SidebarProvider>
+  <div class="">
+    <SidebarProvider class="min-h-0" v-if="!isAddSnippetActive">
+      <SnippetsSidebar class="bg-white "/>
+      <main >
+        <slot />
+      </main>
+    </SidebarProvider>
+  </div>
   <div class="min-w-[400px] max-w-[500px]">
     <!-- <SnippetBreadCrumb class="justify-start p-2"/> -->
     <SnippetList

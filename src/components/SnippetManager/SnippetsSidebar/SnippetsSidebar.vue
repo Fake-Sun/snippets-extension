@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-vue-next"
+import { Calendar, Home, Inbox, Search, Settings, Plus } from "lucide-vue-next"
 import {
   Sidebar,
   SidebarContent,
@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarGroupAction
 } from "@/components/ui/sidebar"
 
 // Menu items.
@@ -46,6 +47,9 @@ const items = [
     <SidebarContent>
       <SidebarGroup>
         <SidebarGroupLabel>Application</SidebarGroupLabel>
+        <SidebarGroupAction title="Add Project">
+          <Plus /> <span className="sr-only">Add Project</span>
+        </SidebarGroupAction>
         <SidebarGroupContent>
           <SidebarMenu>
               <SidebarMenuItem v-for="item in items" :key="item.title">

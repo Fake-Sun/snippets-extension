@@ -71,6 +71,6 @@ onMounted(() => { loadSnippets(); });
 .managerContainer {
   justify-content: center;
   display: flex;
-  align-items: center;
+  align-items: start;
 }
 </style>
