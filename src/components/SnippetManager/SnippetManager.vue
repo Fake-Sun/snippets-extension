@@ -56,7 +56,7 @@ function onEditSnippet(snippet: Snippet) {
       </main>
     </SidebarProvider>
   </div>
-  <div class="min-w-[400px] max-w-[500px]">
+  <div class="min-w-[400px] max-w-[410px]">
     <!-- <SnippetBreadCrumb class="justify-start p-2"/> -->
     <SnippetList
       v-if="!isAddSnippetActive && snippets.length > 0"
@@ -79,6 +79,7 @@ function onEditSnippet(snippet: Snippet) {
         @edit-snippet="onEditSnippet"
         @cancel-clicked="onCancelSnippet"
         :snippets
+        
       />
     </div>
   </div>

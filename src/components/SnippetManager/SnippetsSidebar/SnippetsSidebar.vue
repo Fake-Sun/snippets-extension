@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Calendar, Home, Inbox, Search, Settings, Plus } from "lucide-vue-next"
+import { Calendar, Folder, Inbox, Search, Settings, Plus } from "lucide-vue-next"
 import {
   Sidebar,
   SidebarContent,
@@ -15,9 +15,9 @@ import {
 // Menu items.
 const items = [
   {
-    title: "Folder Name",
+    title: "Fabletics",
     url: "#",
-    icon: Home,
+    icon: Folder,
   },
   {
     title: "Inbox",
