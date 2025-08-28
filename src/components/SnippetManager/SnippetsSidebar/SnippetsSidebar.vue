@@ -15,7 +15,7 @@ import {
 // Menu items.
 const items = [
   {
-    title: "Home",
+    title: "Folder Name",
     url: "#",
     icon: Home,
   },
