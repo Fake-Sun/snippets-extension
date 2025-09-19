@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sidebar"
 
 // Menu items.
-const items = [
+const folders = [
   {
     title: "Fabletics",
     url: "#",
@@ -52,11 +52,11 @@ const items = [
         </SidebarGroupAction>
         <SidebarGroupContent>
           <SidebarMenu>
-              <SidebarMenuItem v-for="item in items" :key="item.title">
+              <SidebarMenuItem v-for="folder in folders" :key="folder.title">
                 <SidebarMenuButton asChild>
-                    <a :href="item.url">
-                      <component :is="item.icon" />
-                      <span>{{item.title}}</span>
+                    <a :href="folder.url">
+                      <component :is="folder.icon" />
+                      <span>{{folder.title}}</span>
                     </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
