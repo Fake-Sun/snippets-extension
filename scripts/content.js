@@ -46,7 +46,7 @@ function isEditable(el) {
 }
 
 function getCaretPosition(el) {
-  // Only for contentEditable; inputs/textareas use selectionStart
+  // Only for contentEiditable; inputs/textareas use selectionStart
   const sel = window.getSelection();
   if (!sel || sel.rangeCount === 0) return null;
   const range = sel.getRangeAt(0);
@@ -120,7 +120,9 @@ function handleInput(e) {
         sel.removeAllRanges();
         sel.addRange(range);
       }
-    } catch {}
+    } catch {
+      console.log("Failed to set caret position in contentEditable");
+    }
   }
 }
 

@@ -17,15 +17,22 @@ const { isAddSnippetActive } = defineProps<{
 
 <template>
   <div class="h-14 w-full bg-primary flex flex-row items-center space-between justify-between p-4">
-    <img src="../assets/SnipplyLogo.png" alt="Snipply Logo" class="w-[7rem] h-auto" />
+    <img src="../assets/SnipplyLogo.png" alt="Snipply Logo" class="bgElement w-[7rem] h-auto" />
     <!-- Need to add v-if statement to the element below, so if we're creating a new snippet, it will not show the "Create Snippet" button. -->
-    <div v-if="!isAddSnippetActive" class="p-1 flex items-center gap-2 newSnippetWrapper clickable" @click="emitNewSnippet"> 
-      <Plus :size="22" absoluteStrokeWidth color="white" class="clickable"/>
-    </div>
+     <div class="p-1 flex items-center gap-2">
+      <div v-if="!isAddSnippetActive" class="p-1 flex items-center gap-2 newSnippetWrapper clickable" @click="emitNewSnippet"> 
+        <Plus :size="22" absoluteStrokeWidth color="white" class="clickable"/>
+      </div>
+     </div>
   </div>
 </template>
 
 <style scoped>
+.bgElement {
+  pointer-events: none;
+  user-select: none;
+}
+
 div img {
   pointer-events: none;
 }

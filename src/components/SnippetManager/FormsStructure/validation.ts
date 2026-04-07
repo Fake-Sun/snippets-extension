@@ -14,7 +14,7 @@ export function createSnippetFormSchema(snippets: Snippet[], snippetId?: string)
     shortcut: z.string({
       required_error: "Atajo es obligatorio."
       })
-      .min(2, "Atajo necesita al menos 3 caracteres.")
+      .min(3, "Atajo necesita al menos 3 caracteres.")
       .max(20, "Atajo no puede contener más de 20 caracteres.")
       .startsWith('/', "Atajo debe comenzar con \"/\"")
       .regex(/^\/\S*$/, "Atajo no puede contener espacios.")

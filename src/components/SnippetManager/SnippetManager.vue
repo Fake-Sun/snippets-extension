@@ -6,12 +6,16 @@ import SnippetList from './SnippetList/SnippetList.vue';
 import type { Snippet } from '@/types/Snippet';
 import { SidebarProvider } from "@/components/ui/sidebar";
 import SnippetsSidebar from './SnippetsSidebar/SnippetsSidebar.vue';
+import type { Folder } from '@/types/Folder';
 // import SnippetBreadCrumb from './Breadcrumb/SnippetBreadcrumb.vue';
 
 const { snippets, isAddSnippetActive } = defineProps<{
   snippets: Snippet[],
+  folders: Folder[],
   isAddSnippetActive: boolean
 }>();
+
+const snippetToEdit = ref<Snippet | null>(null);
 
 const emit = defineEmits<{
   (e: 'snippet-saved'): void;
@@ -19,6 +23,7 @@ const emit = defineEmits<{
   (e: 'toggle-add-snippet', value: boolean): void;
   (e: 'edit-snippet', snippet: Snippet): void;
   (e: 'toggle-add-folder', value: boolean): void;
+  (e: 'folder-saved', folders: Folder[]): void;
 }>();
 
 function forwardSave() {
@@ -39,18 +44,20 @@ function onCancelSnippet() {
   emit('toggle-add-snippet', false);
 }
 
-const snippetToEdit = ref<Snippet | null>(null);
-
 function onEditSnippet(snippet: Snippet) {
   snippetToEdit.value = snippet;
   emit('toggle-add-snippet', true);
+}
+
+function forwardAddfolder(folders: Folder[]) {
+  emit('folder-saved', folders);
 }
 </script>
 
 <template>
   <div class="">
     <SidebarProvider class="min-h-0" v-if="!isAddSnippetActive">
-      <SnippetsSidebar class="bg-white "/>
+      <SnippetsSidebar :folders @updating-folders="(val: Folder[]) => forwardAddfolder(val)" class="bg-white"/>
       <main >
         <slot />
       </main>
@@ -70,6 +77,7 @@ function onEditSnippet(snippet: Snippet) {
     />
     <div v-if="isAddSnippetActive" class="newSnippetWrapper">
       <SnippetEntry
+        class="snippetEntry"
         :initialName="snippetToEdit?.name || ''"
         :initialText="snippetToEdit?.text || ''"
         :initialShortcut="snippetToEdit?.shortcut || ''"
@@ -79,7 +87,6 @@ function onEditSnippet(snippet: Snippet) {
         @edit-snippet="onEditSnippet"
         @cancel-clicked="onCancelSnippet"
         :snippets
-        
       />
     </div>
   </div>
@@ -92,5 +99,10 @@ function onEditSnippet(snippet: Snippet) {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.snippetEntry {
+  position: relative;
+  z-index: 50;
 }
 </style>

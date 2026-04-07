@@ -10,7 +10,7 @@ import { toRaw, computed } from 'vue'
 // 1️⃣ receive your incoming snippet
 const props = defineProps<{
   snippets: Snippet[],
-  snippet: {
+  snippetDraft: {
     initialName:     string
     initialShortcut: string
     initialText:     string
@@ -23,15 +23,15 @@ const props = defineProps<{
 const rawSnippets = computed(() => toRaw(props.snippets));
 
 // ❗ schema is regenerated when `props.snippets` changes
-const schema = computed(() => createSnippetFormSchema(rawSnippets.value, props.snippet.snippetId));
+const schema = computed(() => createSnippetFormSchema(rawSnippets.value, props.snippetDraft.snippetId));
 
 // 2️⃣ set up vee-validate with your schema + seed values
 const { handleSubmit, isFieldDirty } = useForm({
   validationSchema: schema,
   initialValues: {
-    name:     props.snippet.initialName,
-    shortcut: props.snippet.initialShortcut,
-    text:     props.snippet.initialText,
+    name:     props.snippetDraft.initialName,
+    shortcut: props.snippetDraft.initialShortcut,
+    text:     props.snippetDraft.initialText,
   }
 })
 

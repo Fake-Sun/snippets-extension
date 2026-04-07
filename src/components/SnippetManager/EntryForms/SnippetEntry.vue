@@ -17,7 +17,7 @@ const snippetFormRef = ref<InstanceType<typeof SnippetForm> | null>(null);
 // TODO: Make it so that the initial values are dynamically set based on the snippetId prop.
 // This will allow the form to be used for both creating and editing snippets.
 
-const snippet = defineProps<{
+const snippetDraft = defineProps<{
     initialName: string,
     initialText: string,
     initialShortcut: string
@@ -31,7 +31,8 @@ const emit = defineEmits<{
 }>();
 
 function onSaveButtonClick() {
-  // Emit event to update isAddSnippetActive.
+  // Triggers the SnippetForm's internal submit logic via its exposed method.
+  // The actual save happens when the form emits `form-submitted`.
   snippetFormRef.value?.submitForm();
 }
 
@@ -49,7 +50,7 @@ function handleSave(s: Snippet) {
   };
   chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
     const currentSnippets: Snippet[] = result.snippets || [];
-    let i = currentSnippets.findIndex( search =>  snippet.snippetId === search.id );
+    let i = currentSnippets.findIndex( search =>  snippetDraft.snippetId === search.id );
     if (i === -1) {
       // If the snippet is not found, add it to the end of the array.
       currentSnippets.push(newSnippet);
@@ -79,21 +80,21 @@ onMounted(() => {
   <Card class="w-[350px]">
     <CardHeader>
       <NewYorkH3>
-        {{ snippet.snippetId !== '' ? 'Editar Snippet' : 'Nuevo Snippet' }}
+        {{ snippetDraft.snippetId !== '' ? 'Editar Snippet' : 'Nuevo Snippet' }}
       </NewYorkH3>
       <CardDescription>
-        {{ snippet.snippetId !== '' ? 'Guardar cambios a snippet.' : 'Guardar nuevo snippet.' }}
+        {{ snippetDraft.snippetId !== '' ? 'Guardar cambios a snippet.' : 'Guardar nuevo snippet.' }}
       </CardDescription>
     </CardHeader>
     <CardContent>
-      <SnippetForm ref="snippetFormRef" @form-submitted="handleSave" :snippets :snippet/> 
+      <SnippetForm ref="snippetFormRef" @form-submitted="handleSave" :snippets :snippetDraft/> 
     </CardContent>
     <CardFooter class="flex justify-between px-6 ">
       <Button variant="outline" @click="onCancelButtonClick">
         Cancelar
       </Button>
       <Button @click="onSaveButtonClick">
-        {{ snippet.snippetId !== '' ? 'Guardar cambios' : 'Guardar' }}
+        {{ snippetDraft.snippetId !== '' ? 'Guardar cambios' : 'Guardar' }}
       </Button>
     </CardFooter>
   </Card>
