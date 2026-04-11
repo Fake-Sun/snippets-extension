@@ -9,14 +9,24 @@
       "32": "snipply-symbol-32.png"
     }
   },
-  "host_permissions": ["<all_urls>"],
-  "permissions": ["storage", "scripting"],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "permissions": [
+    "storage",
+    "scripting"
+  ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["scripts/content.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "scripts/content.js"
+      ],
       "run_at": "document_idle",
-      "all_frames": true
+      "all_frames": true,
+      "match_about_blank": true
     }
   ],
   "icons": {

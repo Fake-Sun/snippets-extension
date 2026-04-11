@@ -1,160 +1,246 @@
 // content.js
-console.log("✅ content.js is running");
+console.log("Snipply content script is running");
 
-// --- State ---
+/** @typedef {{ shortcut?: string, text?: string }} StoredSnippet */
+
 /** @type {Record<string, string>} */
 let shortcutMap = {};
+/** @type {string[]} */
+let shortcuts = [];
+let composing = false;
+let replacing = false;
 
-// Load current snippets into memory
 async function refreshShortcutMap() {
   try {
     const { snippets = [] } = await chrome.storage.local.get("snippets");
-    // Expecting objects like { shortcut: string, text: string }
-    shortcutMap = Object.fromEntries(
-      (Array.isArray(snippets) ? snippets : []).map(s => [s.shortcut, s.text])
-    );
-  } catch (e) {
-    console.error("Failed loading snippets:", e);
+    setShortcuts(snippets);
+  } catch (error) {
+    console.error("Failed loading snippets:", error);
   }
 }
 
-// Initial load
+/** @param {StoredSnippet[]} snippets */
+function setShortcuts(snippets) {
+  shortcutMap = Object.fromEntries(
+    (Array.isArray(snippets) ? snippets : [])
+      .filter(snippet => snippet.shortcut && snippet.text)
+      .map(snippet => [String(snippet.shortcut), String(snippet.text)])
+  );
+
+  shortcuts = Object.keys(shortcutMap).sort((a, b) => b.length - a.length);
+}
+
 refreshShortcutMap();
 
-// React to changes saved from popup/options/background (hot reload in-page)
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "local" && changes.snippets) {
-    const next = changes.snippets.newValue || [];
-    shortcutMap = Object.fromEntries(next.map(s => [s.shortcut, s.text]));
-    // No need to rebind listeners; replacements will use the updated map.
+    setShortcuts(changes.snippets.newValue || []);
   }
 });
 
-// Optional: accept an explicit broadcast in case you also send a message
-chrome.runtime.onMessage.addListener((msg) => {
-  if (msg && msg.type === "snippets-updated") {
+chrome.runtime.onMessage.addListener((message) => {
+  if (message?.type === "snippets-updated") {
     refreshShortcutMap();
   }
 });
 
-// --- Utilities ---
-function isEditable(el) {
-  if (!el) return false;
-  if (el.isContentEditable) return true;
-  const tag = el.tagName;
-  return tag === "TEXTAREA" || tag === "INPUT";
-}
+/** @param {Event} event */
+function findEditableFromEvent(event) {
+  const path = typeof event.composedPath === "function" ? event.composedPath() : [event.target];
 
-function getCaretPosition(el) {
-  // Only for contentEiditable; inputs/textareas use selectionStart
-  const sel = window.getSelection();
-  if (!sel || sel.rangeCount === 0) return null;
-  const range = sel.getRangeAt(0);
-  // Ensure caret is inside this element
-  if (!el.contains(range.endContainer)) return null;
+  for (const target of path) {
+    if (!(target instanceof Element)) continue;
 
-  const preCaret = range.cloneRange();
-  preCaret.selectNodeContents(el);
-  preCaret.setEnd(range.endContainer, range.endOffset);
-  return preCaret.toString().length;
-}
+    const editable = target.closest?.("textarea, input, [contenteditable], [role='textbox']");
+    if (editable && isEditable(editable)) return editable;
 
-// --- Replacement engine ---
-let composing = false; // avoid interfering with IME composition
-
-function handleInput(e) {
-  if (composing) return;
-
-  const el = e.target;
-  if (!isEditable(el)) return;
-
-  const isInput = el.tagName === "INPUT" || el.tagName === "TEXTAREA";
-  const value = isInput ? el.value : el.textContent || "";
-  const cursor = isInput ? el.selectionStart : getCaretPosition(el);
-  if (cursor == null) return;
-
-  const before = value.slice(0, cursor);
-  const match = before.match(/(\S+)$/);
-  if (!match) return;
-
-  const typed = match[1];
-  const replacement = shortcutMap[typed];
-  if (!replacement) return;
-
-  const newBefore = before.slice(0, -typed.length) + replacement;
-  const newValue = newBefore + value.slice(cursor);
-
-  if (isInput) {
-    el.value = newValue;
-    const newCursor = newBefore.length;
-    el.setSelectionRange(newCursor, newCursor);
-    // Trigger native input events so frameworks detect the change
-    el.dispatchEvent(new Event("input", { bubbles: true }));
-    el.dispatchEvent(new Event("change", { bubbles: true }));
-  } else {
-    // contentEditable
-    el.textContent = newValue;
-    // (Optional) restore caret at end of inserted replacement
-    try {
-      const range = document.createRange();
-      const sel = window.getSelection();
-      // Place caret roughly at newBefore.length; this is a simple approach
-      // For precise positioning across nodes, a text-walker is needed.
-      range.selectNodeContents(el);
-      range.collapse(true);
-      // Move forward newBefore.length characters
-      let remaining = newBefore.length;
-      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
-      let node = walker.nextNode();
-      while (node && remaining > 0) {
-        const take = Math.min(remaining, node.textContent.length);
-        remaining -= take;
-        if (remaining === 0) {
-          range.setStart(node, take);
-          range.collapse(true);
-          break;
-        }
-        node = walker.nextNode();
-      }
-      if (sel) {
-        sel.removeAllRanges();
-        sel.addRange(range);
-      }
-    } catch {
-      console.log("Failed to set caret position in contentEditable");
+    if (target.shadowRoot?.activeElement) {
+      const shadowEditable = findEditableFromElement(target.shadowRoot.activeElement);
+      if (shadowEditable) return shadowEditable;
     }
   }
+
+  return null;
 }
 
-// Bind one element once
-function bindField(el) {
-  if (!isEditable(el) || el.dataset.snippetBound) return;
-  el.dataset.snippetBound = "true";
-  el.addEventListener("compositionstart", () => (composing = true));
-  el.addEventListener("compositionend", () => (composing = false));
-  el.addEventListener("input", handleInput);
+/** @param {Element | null} element */
+function findEditableFromElement(element) {
+  if (!element) return null;
+  const editable = element.closest?.("textarea, input, [contenteditable], [role='textbox']");
+  return editable && isEditable(editable) ? editable : null;
 }
 
-// Attach to current fields
-function bindAllFields() {
-  // Use [contenteditable] (presence) to catch elements where contentEditable=true is set via JS
-  const fields = document.querySelectorAll("textarea, input, [contenteditable]");
-  fields.forEach(bindField);
+/** @param {Element} element */
+function isEditable(element) {
+  if (element instanceof HTMLTextAreaElement) return !element.disabled && !element.readOnly;
+  if (element instanceof HTMLInputElement) {
+    const textLikeTypes = new Set(["", "text", "search", "url", "tel", "email", "password"]);
+    return textLikeTypes.has(element.type) && !element.disabled && !element.readOnly;
+  }
+
+  if (element instanceof HTMLElement) {
+    return element.isContentEditable || element.getAttribute("role") === "textbox";
+  }
+
+  return false;
 }
 
-// Observe DOM mutations (SPA support)
-const observer = new MutationObserver(() => {
-  bindAllFields();
-});
-observer.observe(document.documentElement || document.body, {
-  childList: true,
-  subtree: true,
-});
+/** @param {string} beforeCaret */
+function findShortcutAtEnd(beforeCaret) {
+  for (const shortcut of shortcuts) {
+    if (beforeCaret.endsWith(shortcut)) {
+      return shortcut;
+    }
+  }
 
-// Initial bind
-bindAllFields();
+  return null;
+}
 
-// Cleanup on unload (defensive)
-window.addEventListener("unload", () => {
-  observer.disconnect();
-});
+/** @param {HTMLInputElement | HTMLTextAreaElement} element */
+function replaceInInput(element) {
+  const start = element.selectionStart;
+  const end = element.selectionEnd;
+  if (start == null || end == null || start !== end) return false;
+
+  const beforeCaret = element.value.slice(0, start);
+  const shortcut = findShortcutAtEnd(beforeCaret);
+  if (!shortcut) return false;
+
+  const replacement = shortcutMap[shortcut];
+  const replaceStart = start - shortcut.length;
+
+  replacing = true;
+  try {
+    element.setRangeText(replacement, replaceStart, end, "end");
+    element.dispatchEvent(new InputEvent("input", {
+      bubbles: true,
+      cancelable: true,
+      inputType: "insertReplacementText",
+      data: replacement,
+    }));
+    element.dispatchEvent(new Event("change", { bubbles: true }));
+  } finally {
+    replacing = false;
+  }
+
+  return true;
+}
+
+/** @param {Element} root */
+function getActiveRange(root) {
+  const selection = root.ownerDocument.getSelection();
+  if (!selection || selection.rangeCount === 0 || !selection.isCollapsed) return null;
+
+  const range = selection.getRangeAt(0);
+  if (!root.contains(range.endContainer)) return null;
+
+  return range;
+}
+
+/** @param {Element} root */
+function getTextBeforeCaret(root) {
+  const range = getActiveRange(root);
+  if (!range) return null;
+
+  const before = range.cloneRange();
+  before.selectNodeContents(root);
+  before.setEnd(range.endContainer, range.endOffset);
+  return before.toString();
+}
+
+/** @param {Element} root @param {number} offset */
+function findTextPosition(root, offset) {
+  const walker = root.ownerDocument.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let currentOffset = offset;
+  let node = walker.nextNode();
+
+  while (node) {
+    const text = node.textContent || "";
+    if (currentOffset <= text.length) {
+      return { node, offset: currentOffset };
+    }
+
+    currentOffset -= text.length;
+    node = walker.nextNode();
+  }
+
+  return { node: root, offset: root.childNodes.length };
+}
+
+/** @param {Element} root */
+function replaceInRichEditor(root) {
+  const activeRange = getActiveRange(root);
+  if (!activeRange) return false;
+
+  const beforeCaret = getTextBeforeCaret(root);
+  if (beforeCaret == null) return false;
+
+  const shortcut = findShortcutAtEnd(beforeCaret);
+  if (!shortcut) return false;
+
+  const replacement = shortcutMap[shortcut];
+  const startPosition = findTextPosition(root, beforeCaret.length - shortcut.length);
+  const replaceRange = activeRange.cloneRange();
+  replaceRange.setStart(startPosition.node, startPosition.offset);
+  replaceRange.setEnd(activeRange.endContainer, activeRange.endOffset);
+
+  const selection = root.ownerDocument.getSelection();
+  if (!selection) return false;
+
+  replacing = true;
+  try {
+    selection.removeAllRanges();
+    selection.addRange(replaceRange);
+
+    const insertedWithCommand = root.ownerDocument.execCommand("insertText", false, replacement);
+    if (!insertedWithCommand) {
+      replaceRange.deleteContents();
+      const textNode = root.ownerDocument.createTextNode(replacement);
+      replaceRange.insertNode(textNode);
+      replaceRange.setStartAfter(textNode);
+      replaceRange.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(replaceRange);
+    }
+
+    root.dispatchEvent(new InputEvent("input", {
+      bubbles: true,
+      cancelable: true,
+      inputType: "insertReplacementText",
+      data: replacement,
+    }));
+  } finally {
+    replacing = false;
+  }
+
+  return true;
+}
+
+/** @param {Event} event */
+function handlePossibleReplacement(event) {
+  if (composing || replacing || shortcuts.length === 0) return;
+
+  const editable = findEditableFromEvent(event);
+  if (!editable) return;
+
+  if (editable instanceof HTMLInputElement || editable instanceof HTMLTextAreaElement) {
+    replaceInInput(editable);
+    return;
+  }
+
+  replaceInRichEditor(editable);
+}
+
+document.addEventListener("compositionstart", () => {
+  composing = true;
+}, true);
+
+document.addEventListener("compositionend", (event) => {
+  composing = false;
+  setTimeout(() => handlePossibleReplacement(event), 0);
+}, true);
+
+document.addEventListener("input", handlePossibleReplacement, true);
+document.addEventListener("keyup", handlePossibleReplacement, true);
+
+
