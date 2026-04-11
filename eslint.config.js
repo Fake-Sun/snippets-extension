@@ -5,6 +5,9 @@ import pluginVue from "eslint-plugin-vue";
 import pluginImport from "eslint-plugin-import";
 
 export default [
+  {
+    ignores: ["dist/**", "node_modules/**"],
+  },
   { files: ["**/*.{js,mjs,cjs,ts,vue}"] },
   { languageOptions: { globals: { ...globals.browser, chrome: "readonly" } } },
   pluginJs.configs.recommended,
@@ -16,6 +19,19 @@ export default [
       parserOptions: {
         parser: tseslint.parser,
       },
+    },
+  },
+  {
+    files: ["src/components/ui/**/*.vue"],
+    rules: {
+      "vue/multi-word-component-names": "off",
+      "@typescript-eslint/no-unused-vars": ["error", { varsIgnorePattern: "^_" }],
+    },
+  },
+  {
+    files: ["src/lib/utils.ts"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
   {

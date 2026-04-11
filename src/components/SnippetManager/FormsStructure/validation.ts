@@ -29,7 +29,9 @@ export function createSnippetFormSchema(snippets: Snippet[], snippetId?: string)
     text: z.string({
       required_error: "Texto es obligatorio."
     }).min(2, "Texto debe contener más de 2 caracteres.")
-      .max(1000, "Texto no debe contener más de 1000 caracteres.")
+      .max(1000, "Texto no debe contener más de 1000 caracteres."),
+
+    folderId: z.string().optional()
   }));
 }
 

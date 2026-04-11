@@ -3,53 +3,63 @@ import { useForm } from 'vee-validate'
 import { FormField, FormItem, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import type { Snippet } from '@/types/Snippet'
+import type { Folder } from '@/types/Folder'
 import { createSnippetFormSchema } from './validation'
-import { toRaw, computed } from 'vue'
+import { toRaw, computed, ref } from 'vue'
 
-// 1️⃣ receive your incoming snippet
+const NO_FOLDER_VALUE = 'none'
+
 const props = defineProps<{
   snippets: Snippet[],
+  folders: Folder[],
   snippetDraft: {
-    initialName:     string
+    initialName: string
     initialShortcut: string
-    initialText:     string
-    snippetId:      string
+    initialText: string
+    initialFolderId?: string
+    snippetId: string
   }
 }>()
 
-// Convert the snippets prop to a raw object for validation
-// This is necessary because vee-validate needs to work with a plain object
 const rawSnippets = computed(() => toRaw(props.snippets));
-
-// ❗ schema is regenerated when `props.snippets` changes
 const schema = computed(() => createSnippetFormSchema(rawSnippets.value, props.snippetDraft.snippetId));
+const selectedFolderValue = ref(props.snippetDraft.initialFolderId || NO_FOLDER_VALUE)
 
-// 2️⃣ set up vee-validate with your schema + seed values
 const { handleSubmit, isFieldDirty } = useForm({
   validationSchema: schema,
   initialValues: {
-    name:     props.snippetDraft.initialName,
+    name: props.snippetDraft.initialName,
     shortcut: props.snippetDraft.initialShortcut,
-    text:     props.snippetDraft.initialText,
+    text: props.snippetDraft.initialText,
+    folderId: props.snippetDraft.initialFolderId,
   }
 })
 
-// 3️⃣ emit the final Snippet shape on submit
 const emit = defineEmits<{
   (e: 'form-submitted', snippet: Snippet): void
 }>()
 
 function onSubmit(values: { name: string, shortcut: string, text: string }) {
+  const folderId = selectedFolderValue.value === NO_FOLDER_VALUE ? undefined : selectedFolderValue.value
+
   emit('form-submitted', {
-    name:     values.name,
+    name: values.name,
     shortcut: values.shortcut,
-    text:     values.text,
-    id: crypto.randomUUID(),
+    text: values.text,
+    folderId,
+    id: props.snippetDraft.snippetId || crypto.randomUUID(),
   });
 }
 
-// 4️⃣ expose for programmatic submission
 function submitForm() {
   handleSubmit(onSubmit)();
 }
@@ -59,7 +69,6 @@ defineExpose({ submitForm })
 <template>
   <form @submit.prevent="handleSubmit(onSubmit)">
     <div class="grid gap-4 w-full">
-      <!-- Nombre -->
       <FormField
         name="name"
         :validate-on-blur="!isFieldDirty('name')"
@@ -77,7 +86,7 @@ defineExpose({ submitForm })
           <FormMessage />
         </FormItem>
       </FormField>
-      <!-- Atajo -->
+
       <FormField
         name="shortcut"
         :validate-on-blur="!isFieldDirty('shortcut')"
@@ -95,7 +104,28 @@ defineExpose({ submitForm })
           <FormMessage />
         </FormItem>
       </FormField>
-      <!-- Texto -->
+
+      <div class="grid gap-2">
+        <Label>Carpeta</Label>
+        <Select v-model="selectedFolderValue">
+          <SelectTrigger>
+            <SelectValue placeholder="Selecciona una carpeta" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem :value="NO_FOLDER_VALUE">
+              Sin carpeta
+            </SelectItem>
+            <SelectItem
+              v-for="folder in folders"
+              :key="folder.id ?? folder.name"
+              :value="folder.id ?? folder.name"
+            >
+              {{ folder.name }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <FormField
         name="text"
         :validate-on-blur="!isFieldDirty('text')"

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-vue-next';
 
 const emit = defineEmits<{
@@ -16,39 +17,24 @@ const { isAddSnippetActive } = defineProps<{
 </script>
 
 <template>
-  <div class="h-14 w-full bg-primary flex flex-row items-center space-between justify-between p-4">
-    <img src="../assets/SnipplyLogo.png" alt="Snipply Logo" class="bgElement w-[7rem] h-auto" />
-    <!-- Need to add v-if statement to the element below, so if we're creating a new snippet, it will not show the "Create Snippet" button. -->
-     <div class="p-1 flex items-center gap-2">
-      <div v-if="!isAddSnippetActive" class="p-1 flex items-center gap-2 newSnippetWrapper clickable" @click="emitNewSnippet"> 
-        <Plus :size="22" absoluteStrokeWidth color="white" class="clickable"/>
-      </div>
-     </div>
-  </div>
+  <header class="flex h-14 w-full items-center justify-between border-b bg-primary px-4 text-primary-foreground shadow-sm">
+    <img src="../assets/SnipplyLogo.png" alt="Snipply Logo" class="bgElement h-auto w-28" />
+    <Button
+      v-if="!isAddSnippetActive"
+      variant="outline"
+      size="icon"
+      class="h-8 w-8 border-primary-foreground/80 bg-primary text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+      aria-label="Crear snippet"
+      @click="emitNewSnippet"
+    >
+      <Plus :size="20" absoluteStrokeWidth />
+    </Button>
+  </header>
 </template>
 
 <style scoped>
 .bgElement {
   pointer-events: none;
   user-select: none;
-}
-
-div img {
-  pointer-events: none;
-}
-
-.newSnippetWrapper {
-  transition: transform 0.25s;
-  border: 2px solid white;
-  border-radius: 10px;
-}
-.newSnippetWrapper:hover {
-  background-color: rgb(234, 99, 122);
-  border-radius: 10px;
-
-}
-.clickable {
-  font-size: 0.8rem;
-  cursor: pointer;
 }
 </style>

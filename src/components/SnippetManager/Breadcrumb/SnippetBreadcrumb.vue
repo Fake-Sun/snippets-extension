@@ -1,58 +1,73 @@
 <script lang="ts" setup>
-// import {
-//   Breadcrumb,
-//   BreadcrumbEllipsis,
-//   BreadcrumbItem,
-//   BreadcrumbLink,
-//   BreadcrumbList,
-//   BreadcrumbPage,
-//   BreadcrumbSeparator,
-// } from '@/components/ui/breadcrumb'
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuTrigger,
-// } from '@/components/ui/dropdown-menu'
-// import { House } from 'lucide-vue-next'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button'
+import type { Folder } from '@/types/Folder'
+import { House, Pencil } from 'lucide-vue-next'
+import DeleteFolderButton from '../DeleteFolderButton/DeleteFolderButton.vue'
+
+function folderKey(folder: Folder) {
+  return folder.id ?? folder.name
+}
+
+defineProps<{
+  selectedFolder?: Folder | null
+}>()
+
+const emit = defineEmits<{
+  (e: 'go-home'): void
+  (e: 'edit-folder'): void
+  (e: 'delete-folder', folderId: string): void
+}>()
 </script>
 
-<!-- <template>
-  <Breadcrumb>
-    <BreadcrumbList>
-      <BreadcrumbItem>
-        <House :size="20" class="clickable"/>
-      </BreadcrumbItem>
-      <BreadcrumbSeparator />
-      <BreadcrumbItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger class="flex items-center gap-1">
-            <BreadcrumbEllipsis class="h-4 w-4" />
-            <span class="sr-only">Toggle menu</span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem>Documentation</DropdownMenuItem>
-            <DropdownMenuItem>Themes</DropdownMenuItem>
-            <DropdownMenuItem>GitHub</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </BreadcrumbItem>
-      <BreadcrumbSeparator />
-      <BreadcrumbItem>
-        <BreadcrumbLink to="/">
-          Components
-        </BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbSeparator />
-      <BreadcrumbItem>
-        <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-      </BreadcrumbItem>
-    </BreadcrumbList>
-  </Breadcrumb>
-</template> -->
+<template>
+  <div class="flex min-h-11 items-center justify-between gap-2 border-b px-4 py-2">
+    <Breadcrumb class="min-w-0">
+      <BreadcrumbList class="flex-nowrap">
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            as="button"
+            class="inline-flex cursor-pointer items-center gap-1 text-muted-foreground hover:text-foreground"
+            @click="emit('go-home')"
+          >
+            <House :size="15" absoluteStrokeWidth />
+            Inicio
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <template v-if="selectedFolder">
+          <BreadcrumbSeparator />
+          <BreadcrumbItem class="min-w-0">
+            <BreadcrumbPage class="max-w-[150px] truncate font-medium">
+              {{ selectedFolder.name }}
+            </BreadcrumbPage>
+          </BreadcrumbItem>
+        </template>
+      </BreadcrumbList>
+    </Breadcrumb>
 
-<style scoped>
-.clickable {
-  cursor: pointer;
-}
-</style>
+    <div v-if="selectedFolder" class="flex shrink-0 items-center gap-1">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="h-8 w-8 text-muted-foreground hover:text-foreground"
+        aria-label="Editar carpeta"
+        title="Editar carpeta"
+        @click="emit('edit-folder')"
+      >
+        <Pencil :size="16" absoluteStrokeWidth />
+      </Button>
+      <DeleteFolderButton
+        :folder-id="folderKey(selectedFolder)"
+        :folder-name="selectedFolder.name"
+        @confirm-delete="folderId => emit('delete-folder', folderId)"
+      />
+    </div>
+  </div>
+</template>

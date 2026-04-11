@@ -3,4 +3,5 @@ export interface Snippet {
   text: string
   shortcut: string
   id: string
+  folderId?: string
 }

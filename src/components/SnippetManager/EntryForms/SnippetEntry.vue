@@ -8,20 +8,20 @@ import {
   CardHeader,
 } from '@/components/ui/card'
 import type { Snippet } from '@/types/Snippet'
+import type { Folder } from '@/types/Folder'
 import { onMounted, ref } from 'vue'
 import SnippetForm from '../FormsStructure/SnippetForm.vue'
 import NewYorkH3 from '@/components/Typography/NewYorkH3.vue'
 
 const snippetFormRef = ref<InstanceType<typeof SnippetForm> | null>(null);
 
-// TODO: Make it so that the initial values are dynamically set based on the snippetId prop.
-// This will allow the form to be used for both creating and editing snippets.
-
 const snippetDraft = defineProps<{
     initialName: string,
     initialText: string,
     initialShortcut: string
+    initialFolderId?: string
     snippetId: string
+    folders: Folder[]
 }>();
 
 const emit = defineEmits<{ 
@@ -31,8 +31,6 @@ const emit = defineEmits<{
 }>();
 
 function onSaveButtonClick() {
-  // Triggers the SnippetForm's internal submit logic via its exposed method.
-  // The actual save happens when the form emits `form-submitted`.
   snippetFormRef.value?.submitForm();
 }
 
@@ -47,20 +45,17 @@ function handleSave(s: Snippet) {
     name: s.name,
     shortcut: s.shortcut,
     text: s.text,
+    folderId: s.folderId,
   };
   chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
     const currentSnippets: Snippet[] = result.snippets || [];
     let i = currentSnippets.findIndex( search =>  snippetDraft.snippetId === search.id );
     if (i === -1) {
-      // If the snippet is not found, add it to the end of the array.
       currentSnippets.push(newSnippet);
     }
     else {
-      // If the snippet is found, update it.
       currentSnippets[i] = newSnippet;
     }
-    // Update the storage with the new snippet.
-    // This will overwrite the existing snippets with the new array.
     chrome.storage.local.set({ snippets: currentSnippets }, () => {
       emit('snippet-saved');
       emit('toggle-add-snippet', false);
@@ -77,7 +72,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Card class="w-[350px]">
+  <Card class="max-h-[calc(100vh-2rem)] w-[350px] overflow-hidden">
     <CardHeader>
       <NewYorkH3>
         {{ snippetDraft.snippetId !== '' ? 'Editar Snippet' : 'Nuevo Snippet' }}
@@ -86,8 +81,8 @@ onMounted(() => {
         {{ snippetDraft.snippetId !== '' ? 'Guardar cambios a snippet.' : 'Guardar nuevo snippet.' }}
       </CardDescription>
     </CardHeader>
-    <CardContent>
-      <SnippetForm ref="snippetFormRef" @form-submitted="handleSave" :snippets :snippetDraft/> 
+    <CardContent class="max-h-[calc(100vh-12rem)] overflow-y-auto">
+      <SnippetForm ref="snippetFormRef" @form-submitted="handleSave" :snippets :folders="snippetDraft.folders" :snippetDraft/> 
     </CardContent>
     <CardFooter class="flex justify-between px-6 ">
       <Button variant="outline" @click="onCancelButtonClick">

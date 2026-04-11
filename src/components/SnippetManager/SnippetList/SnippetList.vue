@@ -11,7 +11,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="wrapper p-4 flex flex-col space-y-2 justify-items-center" >
+  <div class="flex min-w-[400px] max-w-full flex-col gap-1.5 p-3">
     <SnippetCard
       v-for="snippet in snippets"
       :key="snippet.shortcut"
@@ -24,10 +24,3 @@ const emit = defineEmits<{
     />
   </div>
 </template>
-
-<style scoped>
-  .wrapper {
-    min-width: 400px;
-    max-width: 100%;
-  }
-</style>

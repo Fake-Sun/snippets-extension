@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-vue-next'
 
 const props = defineProps<{
-  snippetId: string
-  snippetName: string
+  folderId: string
+  folderName: string
 }>()
 
 const emit = defineEmits<{
@@ -13,7 +13,7 @@ const emit = defineEmits<{
 }>()
 
 function confirmDelete() {
-  emit('confirm-delete', props.snippetId)
+  emit('confirm-delete', props.folderId)
 }
 </script>
 
@@ -24,15 +24,16 @@ function confirmDelete() {
         variant="ghost"
         size="icon"
         class="h-8 w-8 text-muted-foreground hover:text-destructive"
-        aria-label="Eliminar snippet"
+        aria-label="Eliminar carpeta"
+        title="Eliminar carpeta"
       >
-        <Trash2 :size="18" absoluteStrokeWidth />
+        <Trash2 :size="16" absoluteStrokeWidth />
       </Button>
     </AlertDialogTrigger>
     <AlertDialogContent>
       <AlertDialogHeader>
         <AlertDialogDescription>
-          Eliminar el snippet <strong>{{ snippetName }}</strong>?
+          Eliminar la carpeta <strong>{{ folderName }}</strong>? Los snippets de esta carpeta quedarán sin carpeta.
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>

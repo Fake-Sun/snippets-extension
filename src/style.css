@@ -32,7 +32,7 @@
     --border:240 5.9% 90%;
     --input:240 5.9% 90%;
     --ring:346.8 77.2% 49.8%;
-    --radius: 0.75rem;
+    --radius: 0.5rem;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -85,8 +85,29 @@
 @layer base {
   * {
     @apply border-border;
+    box-sizing: border-box;
   }
+  html, body {
+    margin: 0;
+    width: 650px;
+    height: 580px;
+    overflow: hidden;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    width: 650px;
+    height: 580px;
+  }
+
   body {
     @apply bg-background text-foreground;
   }
 }
+
+
+
+
+
+

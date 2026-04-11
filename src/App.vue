@@ -11,14 +11,13 @@ const snippets = ref<Snippet[]>([]);
 const folders = ref<Folder[]>([]);
 const isAddSnippetActive = ref(false);
 
-
 function loadSnippets() {
   try {
     chrome.storage.local.get("snippets", (result: { snippets?: Snippet[] }) => {
       snippets.value = (result.snippets && result.snippets.length > 0) ? result.snippets : [];
-  });
+    });
   } catch (error) {
-      console.log(error);
+    console.log(error);
   }
 }
 
@@ -46,7 +45,12 @@ function loadFolders() {
 
 const savingFolders = (savedFolders: Folder[]) => {
   folders.value = savedFolders;
-} 
+}
+
+const handleFolderDeleted = (savedFolders: Folder[], savedSnippets: Snippet[]) => {
+  folders.value = savedFolders;
+  snippets.value = savedSnippets;
+}
 
 onMounted(() => { loadSnippets(); loadFolders(); });
 
@@ -54,16 +58,16 @@ onMounted(() => { loadSnippets(); loadFolders(); });
 
 <template>
   <SnippetNav :isAddSnippetActive @add-snippet="onAddSnippet"/>
-  <div class="managerContainer w-full">
+  <div class="managerContainer w-full flex-1 overflow-y-auto overflow-x-hidden">
     <SnippetManager
-    :snippets
-    :folders
-    :is-add-snippet-active="isAddSnippetActive"
-    @snippet-saved="loadSnippets"
-    @folder-saved="savedFolders => savingFolders(savedFolders)"
-    @delete-snippet="handleDeleteSnippet"
-    @toggle-add-snippet="val => isAddSnippetActive = val"
-
+      :snippets
+      :folders
+      :is-add-snippet-active="isAddSnippetActive"
+      @snippet-saved="loadSnippets"
+      @folder-saved="savedFolders => savingFolders(savedFolders)"
+      @folder-deleted="(savedFolders, savedSnippets) => handleFolderDeleted(savedFolders, savedSnippets)"
+      @delete-snippet="handleDeleteSnippet"
+      @toggle-add-snippet="val => isAddSnippetActive = val"
     />
   </div>
 </template>
@@ -73,5 +77,8 @@ onMounted(() => { loadSnippets(); loadFolders(); });
   justify-content: center;
   display: flex;
   align-items: start;
+  min-height: 0;
 }
 </style>
+
+

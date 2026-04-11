@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardDescription,
@@ -27,63 +28,41 @@ function editSnippet() {
 </script>
 
 <template>
-<Card>
-  <CardHeader class="gap-0 px-4 py-3.5">
-    <div class="header-content">
-      <Label for="cardDescription" class="nameLabel">{{ snippet.name }}</Label>
-      <div class="iconsContainer">
-        <Pencil :size="20" absoluteStrokeWidth @click="editSnippet"/>
-        <DeleteSnippetButton
-          :snippet-id="snippet.id"
-          :snippet-name="snippet.name"
-          @confirm-delete="deleteSnippet"
-        />
-        <Badge class="shortcut-badge text-sm">
+  <Card class="overflow-hidden">
+    <CardHeader class="gap-0 px-3.5 py-3">
+      <div class="flex min-h-8 items-center justify-between gap-2">
+        <Label for="cardDescription" class="line-clamp-1 flex-1 leading-5">{{ snippet.name }}</Label>
+        <div class="flex shrink-0 items-center justify-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            class="h-8 w-8 text-muted-foreground hover:text-foreground"
+            aria-label="Editar snippet"
+            @click="editSnippet"
+          >
+            <Pencil :size="18" absoluteStrokeWidth />
+          </Button>
+          <DeleteSnippetButton
+            :snippet-id="snippet.id"
+            :snippet-name="snippet.name"
+            @confirm-delete="deleteSnippet"
+          />
+          <Badge class="shortcut-badge text-sm">
             <span class="badge-text">
               {{ snippet.shortcut }}
             </span>
-        </Badge>
+          </Badge>
+        </div>
       </div>
-    </div>
-    <CardDescription class="snippet-text">{{ snippet.text }}</CardDescription>
-  </CardHeader>
-</Card>
+      <CardDescription class="snippet-text">{{ snippet.text }}</CardDescription>
+    </CardHeader>
+  </Card>
 </template>
 
 <style scoped>
-:deep(.iconsContainer) svg {
-  cursor: pointer;
-  transition: transform 0.15s;
-}
-:deep(.iconsContainer) svg:hover {
-  transform: scale(1.2);
-}
-.nameLabel {
-  display: inline-block;
-  width: 20ch;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.4;       /* Adjust line height as needed */
-  padding-top: 2px;       /* Add some padding if letters are clipped */
-  vertical-align: middle; /* Ensure it's aligned properly */
-}
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 32px;
-  gap: 0px;
-}
-.iconsContainer {
-  align-items: center;
-  justify-content: center;
-  display:flex;
-  gap: 5px;
-}
 .shortcut-badge {
   box-sizing: border-box;
-  max-width: 19ch; /* overall badge width */
+  max-width: 19ch;
 }
 .badge-text {
   display: block;
@@ -101,4 +80,3 @@ function editSnippet() {
   pointer-events: none;
 }
 </style>
-  

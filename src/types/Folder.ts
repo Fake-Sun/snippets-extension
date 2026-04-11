@@ -1,5 +1,6 @@
 import type { Snippet } from './Snippet';
 import type { Component } from 'vue';
+import type { FolderIconName } from '@/lib/folderIcons';
 
 export interface Folder {
   id?: string
@@ -8,6 +9,7 @@ export interface Folder {
   parentId?: string
   children?: Folder[]
   snippets?: Snippet[] // Only present in leaf folders
-  icon?: Component // Icon component from lucide-vue-next
+  iconName?: FolderIconName
+  icon?: Component // Legacy in-memory icon component support
   url?: string // Optional URL for the folder, used for navigation
 }
