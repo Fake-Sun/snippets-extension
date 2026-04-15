@@ -188,7 +188,7 @@ function forwardAddfolder(savedFolders: Folder[], savedFolder: Folder) {
 
   </div>
 
-  <Teleport to="body">
+  <Teleport to="#app">
     <div
       v-if="isAddSnippetActive || isAddFolderActive"
       class="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-muted-foreground/20 p-4 backdrop-blur-[2px]"
@@ -219,6 +219,7 @@ function forwardAddfolder(savedFolders: Folder[], savedFolder: Folder) {
     </div>
   </Teleport>
 </template>
+
 
 
 
