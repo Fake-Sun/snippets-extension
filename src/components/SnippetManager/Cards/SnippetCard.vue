@@ -10,8 +10,10 @@ import { Label } from '@/components/ui/label'
 import type { Snippet } from '@/types/Snippet';
 import { Pencil } from 'lucide-vue-next'
 import DeleteSnippetButton from '../DeleteSnippetButton/DeleteSnippetButton.vue';
+import { useI18n } from '@/lib/i18n';
 
 const snippet = defineProps<Snippet>()
+const { t } = useI18n()
 
 const emit = defineEmits<{
   (e: 'delete-snippet', identifier: string): void
@@ -37,7 +39,7 @@ function editSnippet() {
             variant="ghost"
             size="icon"
             class="h-8 w-8 text-muted-foreground hover:text-foreground"
-            aria-label="Editar snippet"
+            :aria-label="t('editSnippet')"
             @click="editSnippet"
           >
             <Pencil :size="18" absoluteStrokeWidth />
@@ -80,3 +82,4 @@ function editSnippet() {
   pointer-events: none;
 }
 </style>
+

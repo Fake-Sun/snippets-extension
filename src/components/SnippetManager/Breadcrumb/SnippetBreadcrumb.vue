@@ -11,6 +11,9 @@ import { Button } from '@/components/ui/button'
 import type { Folder } from '@/types/Folder'
 import { House, Pencil } from 'lucide-vue-next'
 import DeleteFolderButton from '../DeleteFolderButton/DeleteFolderButton.vue'
+import { useI18n } from '@/lib/i18n'
+
+const { t } = useI18n()
 
 function folderKey(folder: Folder) {
   return folder.id ?? folder.name
@@ -37,9 +40,7 @@ const emit = defineEmits<{
             class="inline-flex cursor-pointer items-center gap-1 text-muted-foreground hover:text-foreground"
             @click="emit('go-home')"
           >
-            <House :size="15" absoluteStrokeWidth />
-            Inicio
-          </BreadcrumbLink>
+            <House :size="15" absoluteStrokeWidth />{{ t('home') }}</BreadcrumbLink>
         </BreadcrumbItem>
         <template v-if="selectedFolder">
           <BreadcrumbSeparator />
@@ -57,8 +58,8 @@ const emit = defineEmits<{
         variant="ghost"
         size="icon"
         class="h-8 w-8 text-muted-foreground hover:text-foreground"
-        aria-label="Editar carpeta"
-        title="Editar carpeta"
+        :aria-label="t('editFolder')"
+        :title="t('editFolder')"
         @click="emit('edit-folder')"
       >
         <Pencil :size="16" absoluteStrokeWidth />

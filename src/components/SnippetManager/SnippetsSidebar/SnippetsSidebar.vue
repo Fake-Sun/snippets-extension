@@ -15,6 +15,9 @@ import {
 import { sort } from "fast-sort"
 import { computed } from 'vue';
 import { getFolderIcon } from '@/lib/folderIcons';
+import { useI18n } from '@/lib/i18n';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   folders: Folder[]
@@ -38,12 +41,12 @@ function resolveFolderIcon(folder: Folder) {
     <SidebarContent>
       <SidebarGroup>
         <div class="flex flex-row items-center justify-between text-sm">
-          <SidebarGroupLabel class="bgElement">Carpetas</SidebarGroupLabel>
+          <SidebarGroupLabel class="bgElement">{{ t('folders') }}</SidebarGroupLabel>
           <Button
             variant="ghost"
             size="icon"
             class="h-8 w-8"
-            aria-label="Agregar carpeta"
+            :aria-label="t('addFolder')"
             @click="emit('add-folder')"
           >
             <FolderPlus :size="20" />

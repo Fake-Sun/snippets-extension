@@ -2,6 +2,9 @@
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-vue-next'
+import { useI18n } from '@/lib/i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   snippetId: string
@@ -24,7 +27,7 @@ function confirmDelete() {
         variant="ghost"
         size="icon"
         class="h-8 w-8 text-muted-foreground hover:text-destructive"
-        aria-label="Eliminar snippet"
+        :aria-label="t('deleteSnippet')"
       >
         <Trash2 :size="18" absoluteStrokeWidth />
       </Button>
@@ -32,14 +35,12 @@ function confirmDelete() {
     <AlertDialogContent>
       <AlertDialogHeader>
         <AlertDialogDescription>
-          Eliminar el snippet <strong>{{ snippetName }}</strong>?
+          {{ t('deleteSnippetConfirm', { name: snippetName }) }}
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-        <AlertDialogAction @click="confirmDelete">
-          Eliminar
-        </AlertDialogAction>
+        <AlertDialogCancel>{{ t('cancel') }}</AlertDialogCancel>
+        <AlertDialogAction @click="confirmDelete">{{ t('delete') }}</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>

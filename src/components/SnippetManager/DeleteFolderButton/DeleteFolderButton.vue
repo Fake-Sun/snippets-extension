@@ -2,6 +2,9 @@
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-vue-next'
+import { useI18n } from '@/lib/i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   folderId: string
@@ -24,8 +27,8 @@ function confirmDelete() {
         variant="ghost"
         size="icon"
         class="h-8 w-8 text-muted-foreground hover:text-destructive"
-        aria-label="Eliminar carpeta"
-        title="Eliminar carpeta"
+        :aria-label="t('deleteFolder')"
+        :title="t('deleteFolder')"
       >
         <Trash2 :size="16" absoluteStrokeWidth />
       </Button>
@@ -33,14 +36,12 @@ function confirmDelete() {
     <AlertDialogContent>
       <AlertDialogHeader>
         <AlertDialogDescription>
-          Eliminar la carpeta <strong>{{ folderName }}</strong>? Los snippets de esta carpeta quedarán sin carpeta.
+          {{ t('deleteFolderConfirm', { name: folderName }) }}
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-        <AlertDialogAction @click="confirmDelete">
-          Eliminar
-        </AlertDialogAction>
+        <AlertDialogCancel>{{ t('cancel') }}</AlertDialogCancel>
+        <AlertDialogAction @click="confirmDelete">{{ t('delete') }}</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>

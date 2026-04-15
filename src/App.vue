@@ -6,10 +6,12 @@ import SnippetManager from './components/SnippetManager/SnippetManager.vue';
 import type { Snippet } from './types/Snippet';
 import type { Folder } from './types/Folder';
 import SnippetNav from './components/SnippetNav.vue'
+import { provideI18n, type LanguageCode } from './lib/i18n'
 
 const snippets = ref<Snippet[]>([]);
 const folders = ref<Folder[]>([]);
 const isAddSnippetActive = ref(false);
+const { setLocale } = provideI18n();
 
 function loadSnippets() {
   try {
@@ -52,7 +54,15 @@ const handleFolderDeleted = (savedFolders: Folder[], savedSnippets: Snippet[]) =
   snippets.value = savedSnippets;
 }
 
-onMounted(() => { loadSnippets(); loadFolders(); });
+function loadSettings() {
+  chrome.storage.local.get('settings', (result: { settings?: { language?: LanguageCode } }) => {
+    if (result.settings?.language) {
+      setLocale(result.settings.language);
+    }
+  });
+}
+
+onMounted(() => { loadSettings(); loadSnippets(); loadFolders(); });
 
 </script>
 
@@ -80,5 +90,6 @@ onMounted(() => { loadSnippets(); loadFolders(); });
   min-height: 0;
 }
 </style>
+
 
 

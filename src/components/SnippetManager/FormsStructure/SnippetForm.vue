@@ -15,6 +15,7 @@ import type { Snippet } from '@/types/Snippet'
 import type { Folder } from '@/types/Folder'
 import { createSnippetFormSchema } from './validation'
 import { toRaw, computed, ref } from 'vue'
+import { useI18n, useSnippetValidationMessages } from '@/lib/i18n'
 
 const NO_FOLDER_VALUE = 'none'
 
@@ -30,8 +31,10 @@ const props = defineProps<{
   }
 }>()
 
+const { t } = useI18n();
+const validationMessages = useSnippetValidationMessages();
 const rawSnippets = computed(() => toRaw(props.snippets));
-const schema = computed(() => createSnippetFormSchema(rawSnippets.value, props.snippetDraft.snippetId));
+const schema = computed(() => createSnippetFormSchema(rawSnippets.value, props.snippetDraft.snippetId, validationMessages.value));
 const selectedFolderValue = ref(props.snippetDraft.initialFolderId || NO_FOLDER_VALUE)
 
 const { handleSubmit, isFieldDirty } = useForm({
@@ -75,11 +78,11 @@ defineExpose({ submitForm })
         v-slot="{ componentField }"
       >
         <FormItem>
-          <FormLabel>Nombre</FormLabel>
+          <FormLabel>{{ t('name') }}</FormLabel>
           <FormControl>
             <Input
               id="name"
-              placeholder="Nombre de tu snippet"
+              :placeholder="t('snippetNamePlaceholder')"
               v-bind="componentField"
             />
           </FormControl>
@@ -93,11 +96,11 @@ defineExpose({ submitForm })
         v-slot="{ componentField }"
       >
         <FormItem>
-          <FormLabel>Atajo</FormLabel>
+          <FormLabel>{{ t('shortcut') }}</FormLabel>
           <FormControl>
             <Input
               id="shortcut"
-              placeholder="Ejemplo: /atajo"
+              :placeholder="t('shortcutPlaceholder')"
               v-bind="componentField"
             />
           </FormControl>
@@ -106,14 +109,14 @@ defineExpose({ submitForm })
       </FormField>
 
       <div class="grid gap-2">
-        <Label>Carpeta</Label>
+        <Label>{{ t('folder') }}</Label>
         <Select v-model="selectedFolderValue">
           <SelectTrigger>
-            <SelectValue placeholder="Selecciona una carpeta" />
+            <SelectValue :placeholder="t('selectFolder')" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem :value="NO_FOLDER_VALUE">
-              Sin carpeta
+              {{ t('noFolder') }}
             </SelectItem>
             <SelectItem
               v-for="folder in folders"
@@ -132,11 +135,11 @@ defineExpose({ submitForm })
         v-slot="{ componentField }"
       >
         <FormItem>
-          <FormLabel>Texto del snippet</FormLabel>
+          <FormLabel>{{ t('snippetText') }}</FormLabel>
           <FormControl>
             <Textarea
               id="text"
-              placeholder="El texto que el snippet va a generar."
+              :placeholder="t('snippetTextPlaceholder')"
               v-bind="componentField"
             />
           </FormControl>

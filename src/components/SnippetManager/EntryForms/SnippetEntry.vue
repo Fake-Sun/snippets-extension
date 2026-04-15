@@ -12,8 +12,10 @@ import type { Folder } from '@/types/Folder'
 import { onMounted, ref } from 'vue'
 import SnippetForm from '../FormsStructure/SnippetForm.vue'
 import NewYorkH3 from '@/components/Typography/NewYorkH3.vue'
+import { useI18n } from '@/lib/i18n'
 
 const snippetFormRef = ref<InstanceType<typeof SnippetForm> | null>(null);
+const { t } = useI18n();
 
 const snippetDraft = defineProps<{
     initialName: string,
@@ -75,21 +77,19 @@ onMounted(() => {
   <Card class="max-h-[calc(100vh-2rem)] w-[350px] overflow-hidden">
     <CardHeader>
       <NewYorkH3>
-        {{ snippetDraft.snippetId !== '' ? 'Editar Snippet' : 'Nuevo Snippet' }}
+        {{ snippetDraft.snippetId !== '' ? t('editSnippetTitle') : t('newSnippet') }}
       </NewYorkH3>
       <CardDescription>
-        {{ snippetDraft.snippetId !== '' ? 'Guardar cambios a snippet.' : 'Guardar nuevo snippet.' }}
+        {{ snippetDraft.snippetId !== '' ? t('saveSnippetChanges') : t('saveNewSnippet') }}
       </CardDescription>
     </CardHeader>
     <CardContent class="max-h-[calc(100vh-12rem)] overflow-y-auto">
       <SnippetForm ref="snippetFormRef" @form-submitted="handleSave" :snippets :folders="snippetDraft.folders" :snippetDraft/> 
     </CardContent>
     <CardFooter class="flex justify-between px-6 ">
-      <Button variant="outline" @click="onCancelButtonClick">
-        Cancelar
-      </Button>
+      <Button variant="outline" @click="onCancelButtonClick">{{ t('cancel') }}</Button>
       <Button @click="onSaveButtonClick">
-        {{ snippetDraft.snippetId !== '' ? 'Guardar cambios' : 'Guardar' }}
+        {{ snippetDraft.snippetId !== '' ? t('saveChanges') : t('save') }}
       </Button>
     </CardFooter>
   </Card>

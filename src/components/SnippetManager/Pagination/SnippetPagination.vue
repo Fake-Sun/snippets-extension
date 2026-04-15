@@ -2,6 +2,9 @@
 import { computed } from 'vue'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
+import { useI18n } from '@/lib/i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   page: number
@@ -23,13 +26,13 @@ function goToPage(page: number) {
 </script>
 
 <template>
-  <nav class="flex items-center justify-center gap-2" aria-label="Paginación de snippets">
+  <nav class="flex items-center justify-center gap-2" :aria-label="t('paginationLabel')">
     <Button
       v-if="props.page > 1"
       variant="outline"
       size="icon"
       class="h-7 w-7"
-      aria-label="Página anterior"
+      :aria-label="t('previousPage')"
       @click="goToPage(props.page - 1)"
     >
       <ChevronLeft :size="15" absoluteStrokeWidth />
@@ -41,7 +44,7 @@ function goToPage(page: number) {
         :key="pageNumber"
         class="h-7 w-7 p-0 text-xs"
         :variant="pageNumber === props.page ? 'default' : 'outline'"
-        :aria-label="`Página ${pageNumber}`"
+        :aria-label="t('page', { page: pageNumber })"
         @click="goToPage(pageNumber)"
       >
         {{ pageNumber }}
@@ -53,7 +56,7 @@ function goToPage(page: number) {
       variant="outline"
       size="icon"
       class="h-7 w-7"
-      aria-label="Página siguiente"
+      :aria-label="t('nextPage')"
       @click="goToPage(props.page + 1)"
     >
       <ChevronRight :size="15" absoluteStrokeWidth />

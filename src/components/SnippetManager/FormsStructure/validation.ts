@@ -1,46 +1,35 @@
-import {z} from 'zod'
-import { toTypedSchema } from '@vee-validate/zod';
-import type { Snippet } from '../../../types/Snippet';
+import { z } from 'zod'
+import { toTypedSchema } from '@vee-validate/zod'
+import type { Snippet } from '../../../types/Snippet'
+import type { SnippetValidationMessages } from '@/lib/i18n'
 
-export function createSnippetFormSchema(snippets: Snippet[], snippetId?: string) {
+export function createSnippetFormSchema(snippets: Snippet[], snippetId: string | undefined, messages: SnippetValidationMessages) {
   return toTypedSchema(z.object({
-    name: z.string({ 
-      required_error: "Nombre es obligatorio."
-    }).min(3, "Nombre necesita al menos 3 caracteres.")
-      .max(50, "Nombre no puede contener más de 50 caracteres.")
-      // Transform to replace new lines with spaces
+    name: z.string({
+      required_error: messages.nameRequired,
+    }).min(3, messages.nameMin)
+      .max(50, messages.nameMax)
       .transform(value => value.replace(/[\r\n]+/g, ' ')),
 
     shortcut: z.string({
-      required_error: "Atajo es obligatorio."
-      })
-      .min(3, "Atajo necesita al menos 3 caracteres.")
-      .max(20, "Atajo no puede contener más de 20 caracteres.")
-      .startsWith('/', "Atajo debe comenzar con \"/\"")
-      .regex(/^\/\S*$/, "Atajo no puede contener espacios.")
-      // Validate that the shortcut is unique among existing snippets
+      required_error: messages.shortcutRequired,
+    })
+      .min(3, messages.shortcutMin)
+      .max(20, messages.shortcutMax)
+      .startsWith('/', messages.shortcutSlash)
+      .regex(/^\/\S*$/, messages.shortcutSpaces)
       .refine((value) => {
-        return !snippets.some(snippet => snippet.shortcut === value && snippet.id !== snippetId);
+        return !snippets.some(snippet => snippet.shortcut === value && snippet.id !== snippetId)
       }, {
-        message: "Este atajo ya existe.",
+        message: messages.shortcutExists,
       })
       .transform(value => value.toLowerCase()),
 
     text: z.string({
-      required_error: "Texto es obligatorio."
-    }).min(2, "Texto debe contener más de 2 caracteres.")
-      .max(1000, "Texto no debe contener más de 1000 caracteres."),
+      required_error: messages.textRequired,
+    }).min(2, messages.textMin)
+      .max(1000, messages.textMax),
 
-    folderId: z.string().optional()
-  }));
+    folderId: z.string().optional(),
+  }))
 }
-
-// export const folderFormSchema = toTypedSchema(z.object({
-//   name: z.string({
-//     required_error: "Nombre es obligatorio."
-//   }).min(3, "Nombre necesita al menos 3 caracteres.")
-//     .max(50, "Nombre no puede contener más de 20 caracteres.")
-//     // Transform to replace new lines with spaces
-//     .transform(value => value.replace(/[\r\n]+/g, ' ')),
-//   description: z.string().max(200, "Descripción no puede contener más de 200 caracteres.").optional()
-// }));
