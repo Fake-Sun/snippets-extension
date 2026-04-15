@@ -89,8 +89,8 @@
   }
   html, body {
     margin: 0;
-    width: var(--popup-width, 650px);
-    height: var(--popup-height, 580px);
+    width: 650px;
+    height: 580px;
     overflow: hidden;
   }
 
@@ -99,14 +99,13 @@
     flex-direction: column;
     width: 650px;
     height: 580px;
-    transform: scale(var(--popup-scale, 1));
-    transform-origin: top left;
   }
 
   body {
     @apply bg-background text-foreground;
   }
 }
+
 
 
 
